@@ -1,7 +1,7 @@
 import { pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
-import { leagues } from "./leagues.js";
-import { sports } from "./sports.js";
-import { teams } from "./teams.js";
+import { leagues } from "./leagues";
+import { sports } from "./sports";
+import { teams } from "./teams";
 
 export const matches = pgTable("matches", {
   id: uuid("id").defaultRandom().primaryKey(),

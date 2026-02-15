@@ -9,7 +9,7 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
-import { matches } from "./matches.js";
+import { matches } from "./matches";
 
 /**
  *

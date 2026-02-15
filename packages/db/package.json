@@ -11,11 +11,11 @@
   },
   "scripts": {
     "check-types": "tsc -b",
-    "build": "tsc --build",
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
     "db:studio": "drizzle-kit studio",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "db:pull": "drizzle-kit pull"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",
