@@ -7,7 +7,7 @@ import {
   listLeagues,
   updateLeague,
 } from "@/services/leagues.service.js";
-import { sendResponse } from "@/utils/Api-response.js";
+import { sendResponse } from "@/utils/Api-response";
 
 export const createLeagueHandler = async (req: Request, res: Response) => {
   const league = await createLeague(req.body);

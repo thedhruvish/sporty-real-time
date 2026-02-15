@@ -7,7 +7,7 @@ import {
   listLiveEvents,
   updateLiveEvent,
 } from "@/services/live-devents.service.js";
-import { sendResponse } from "@/utils/Api-response.js";
+import { sendResponse } from "@/utils/Api-response";
 
 export const createLiveEventHandler = async (req: Request, res: Response) => {
   const event = await createLiveEvent(req.body);

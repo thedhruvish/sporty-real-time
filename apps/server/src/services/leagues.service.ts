@@ -1,8 +1,7 @@
-import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
-import { eq } from "drizzle-orm";
-import { db } from "@/db/db.js";
-import { leagues } from "@/db/schema/leagues.js";
-import { ApiError } from "@/utils/Api-response.js";
+import type { InferInsertModel, InferSelectModel } from "@sporty/db";
+import { db, eq } from "@sporty/db";
+import { leagues } from "@sporty/db/schema";
+import { ApiError } from "@/utils/Api-response";
 
 export type League = InferSelectModel<typeof leagues>;
 export type LeagueCreate = InferInsertModel<typeof leagues>;

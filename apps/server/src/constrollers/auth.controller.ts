@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { loginUser, registerUser } from "@/services/auth.service.js";
-import { sendResponse } from "@/utils/Api-response.js";
+import { sendResponse } from "@/utils/Api-response";
 
 export const registerHandler = async (req: Request, res: Response) => {
   const result = await registerUser(req.body.email, req.body.password);

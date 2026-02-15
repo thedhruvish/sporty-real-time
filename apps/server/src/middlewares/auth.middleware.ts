@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { ApiError } from "@/utils/Api-response.js";
+import { ApiError } from "@/utils/Api-response";
 
 type JwtPayload = {
   sub: string;

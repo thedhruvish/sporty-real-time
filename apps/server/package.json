@@ -13,6 +13,7 @@
     "@sporty/db": "workspace:*",
     "@sporty/env": "workspace:*",
     "@sporty/validation": "workspace:*",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "catalog:",
     "express": "^5.1.0",
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "@sporty/config": "workspace:*",
+    "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.10",

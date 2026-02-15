@@ -7,7 +7,7 @@ import {
   listSports,
   updateSport,
 } from "@/services/sports.service.js";
-import { sendResponse } from "@/utils/Api-response.js";
+import { sendResponse } from "@/utils/Api-response";
 
 export const createSportHandler = async (req: Request, res: Response) => {
   const sport = await createSport(req.body);

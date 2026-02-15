@@ -1,4 +1,4 @@
-import { createSportSchema } from "@sporty/validation";
+import { createSportSchema, updateSportSchema } from "@sporty/validation";
 import { Router } from "express";
 import {
   createSportHandler,

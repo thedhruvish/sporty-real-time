@@ -1,10 +1,8 @@
+import { db, eq, type InferSelectModel } from "@sporty/db";
+import { users } from "@sporty/db/schema";
 import bcrypt from "bcrypt";
-import type { InferSelectModel } from "drizzle-orm";
-import { eq } from "drizzle-orm";
 import jwt from "jsonwebtoken";
-import { db } from "@/db/db.js";
-import { users } from "@/db/schema/users.js";
-import { ApiError } from "@/utils/Api-response.js";
+import { ApiError } from "@/utils/Api-response";
 
 export type User = InferSelectModel<typeof users>;
 

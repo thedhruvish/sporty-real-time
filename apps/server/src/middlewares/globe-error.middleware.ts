@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { ApiError } from "@/utils/Api-response.js";
+import { ApiError } from "@/utils/Api-response";
 
 const isDev = process.env.NODE_ENV === "development";
 

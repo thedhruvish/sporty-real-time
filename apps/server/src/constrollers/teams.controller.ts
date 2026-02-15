@@ -7,7 +7,7 @@ import {
   listTeams,
   updateTeam,
 } from "@/services/teams.service.js";
-import { sendResponse } from "@/utils/Api-response.js";
+import { sendResponse } from "@/utils/Api-response";
 
 export const createTeamHandler = async (req: Request, res: Response) => {
   const team = await createTeam(req.body);

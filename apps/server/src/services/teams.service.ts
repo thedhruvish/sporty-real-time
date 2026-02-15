@@ -1,8 +1,8 @@
-import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
-import { eq } from "drizzle-orm";
-import { db } from "@/db/db.js";
-import { teams } from "@/db/schema/teams.js";
-import { ApiError } from "@/utils/Api-response.js";
+import type { InferInsertModel, InferSelectModel } from "@sporty/db";
+import { db, eq } from "@sporty/db";
+import { teams } from "@sporty/db/schema";
+
+import { ApiError } from "@/utils/Api-response";
 
 export type Team = InferSelectModel<typeof teams>;
 export type TeamCreate = InferInsertModel<typeof teams>;

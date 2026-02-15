@@ -1,7 +1,7 @@
-import { eq } from "drizzle-orm";
-import { db } from "@/db/db.js";
-import { users } from "@/db/schema/users.js";
-import { ApiError } from "@/utils/Api-response.js";
+import { db, eq } from "@sporty/db";
+import { users } from "@sporty/db/schema";
+
+import { ApiError } from "@/utils/Api-response";
 
 export type PublicUser = {
   id: string;

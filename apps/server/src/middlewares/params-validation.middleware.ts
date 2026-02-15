@@ -1,6 +1,6 @@
 import { idValidators } from "@sporty/validation";
 import type { NextFunction, Request, Response } from "express";
-import { ApiError } from "@/utils/Api-response.js";
+import { ApiError } from "@/utils/Api-response";
 
 export default function paramsValidation(
   _req: Request,

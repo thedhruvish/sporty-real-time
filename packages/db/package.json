@@ -5,11 +5,13 @@
     ".": {
       "default": "./src/index.ts"
     },
-    "./*": {
-      "default": "./src/*.ts"
+    "./schema": {
+      "default": "./src/schema/index.ts"
     }
   },
   "scripts": {
+    "check-types": "tsc -b",
+    "build": "tsc --build",
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
     "db:studio": "drizzle-kit studio",

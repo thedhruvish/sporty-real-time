@@ -1,8 +1,8 @@
-import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
-import { and, eq, isNull } from "drizzle-orm";
-import { db } from "@/db/db.js";
-import { liveEvents } from "@/db/schema/live-events.js";
-import { ApiError } from "@/utils/Api-response.js";
+import type { InferInsertModel, InferSelectModel } from "@sporty/db";
+import { and, db, eq, isNull } from "@sporty/db";
+import { liveEvents } from "@sporty/db/schema";
+
+import { ApiError } from "@/utils/Api-response";
 
 export type LiveEvent = InferSelectModel<typeof liveEvents>;
 export type LiveEventCreate = InferInsertModel<typeof liveEvents>;

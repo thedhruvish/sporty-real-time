@@ -7,7 +7,7 @@ import {
   listMatches,
   updateMatch,
 } from "@/services/matches.service.js";
-import { sendResponse } from "@/utils/Api-response.js";
+import { sendResponse } from "@/utils/Api-response";
 
 export const createMatchHandler = async (req: Request, res: Response) => {
   const match = await createMatch(req.body);
