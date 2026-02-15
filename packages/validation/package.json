@@ -1,0 +1,20 @@
+{
+  "name": "@sporty/validation",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@sporty/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

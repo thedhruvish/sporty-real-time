@@ -12,15 +12,18 @@
   "dependencies": {
     "@sporty/db": "workspace:*",
     "@sporty/env": "workspace:*",
+    "@sporty/validation": "workspace:*",
     "cors": "^2.8.5",
     "dotenv": "catalog:",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.3",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@sporty/config": "workspace:*",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "catalog:",
     "tsdown": "^0.16.5",
     "tsx": "^4.19.2",
