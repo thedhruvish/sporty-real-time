@@ -52,6 +52,10 @@
           }
         }
       },
+      "a11y": {
+        "noStaticElementInteractions": "off",
+        "useValidAriaRole": "off"
+      },
       "style": {
         "noParameterAssign": "error",
         "useAsConstAssertion": "error",

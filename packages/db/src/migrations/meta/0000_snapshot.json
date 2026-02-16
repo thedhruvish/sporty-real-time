@@ -103,9 +103,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "sports_slug_unique": {
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "nullsNotDistinct": false,
           "name": "sports_slug_unique"
         }
@@ -164,12 +162,8 @@
           "tableFrom": "leagues",
           "tableTo": "sports",
           "schemaTo": "public",
-          "columnsFrom": [
-            "sport_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["sport_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -242,12 +236,8 @@
           "tableFrom": "matches",
           "tableTo": "sports",
           "schemaTo": "public",
-          "columnsFrom": [
-            "sport_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["sport_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -256,12 +246,8 @@
           "tableFrom": "matches",
           "tableTo": "leagues",
           "schemaTo": "public",
-          "columnsFrom": [
-            "league_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["league_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -270,12 +256,8 @@
           "tableFrom": "matches",
           "tableTo": "teams",
           "schemaTo": "public",
-          "columnsFrom": [
-            "team_a_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["team_a_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -284,12 +266,8 @@
           "tableFrom": "matches",
           "tableTo": "teams",
           "schemaTo": "public",
-          "columnsFrom": [
-            "team_b_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["team_b_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -425,12 +403,8 @@
           "tableFrom": "live_events",
           "tableTo": "matches",
           "schemaTo": "public",
-          "columnsFrom": [
-            "match_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["match_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -485,12 +459,8 @@
           "tableFrom": "teams",
           "tableTo": "sports",
           "schemaTo": "public",
-          "columnsFrom": [
-            "sport_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["sport_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
