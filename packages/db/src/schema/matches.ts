@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import { pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { leagues } from "./leagues";
 import { sports } from "./sports";
@@ -26,3 +27,22 @@ export const matches = pgTable("matches", {
   startTime: timestamp("start_time"),
   createdAt: timestamp("created_at").defaultNow(),
 });
+
+export const matchesRelations = relations(matches, ({ one }) => ({
+  sport: one(sports, {
+    fields: [matches.sportId],
+    references: [sports.id],
+  }),
+  league: one(leagues, {
+    fields: [matches.leagueId],
+    references: [leagues.id],
+  }),
+  teamA: one(teams, {
+    fields: [matches.teamAId],
+    references: [teams.id],
+  }),
+  teamB: one(teams, {
+    fields: [matches.teamBId],
+    references: [teams.id],
+  }),
+}));

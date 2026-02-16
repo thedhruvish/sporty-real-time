@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import ReactDOM from "react-dom/client";
 
@@ -18,6 +19,7 @@ declare module "@tanstack/react-router" {
 }
 
 const rootElement = document.getElementById("app");
+const queryClient = new QueryClient();
 
 if (!rootElement) {
   throw new Error("Root element not found");
@@ -25,5 +27,9 @@ if (!rootElement) {
 
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
-  root.render(<RouterProvider router={router} />);
+  root.render(
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider context={queryClient} router={router} />
+    </QueryClientProvider>,
+  );
 }

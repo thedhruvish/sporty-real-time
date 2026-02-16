@@ -5,6 +5,7 @@ export class ApiResponse<T> {
     public readonly statusCode: number,
     public readonly message: string,
     public readonly data: T,
+    public readonly success: boolean,
   ) {}
 }
 
@@ -38,5 +39,12 @@ export const sendResponse = <T>(
 ) => {
   return res
     .status(statusCode)
-    .json(new ApiResponse<T>(statusCode, message, data));
+    .json(
+      new ApiResponse<T>(
+        statusCode,
+        message,
+        data,
+        statusCode >= 200 && statusCode < 300,
+      ),
+    );
 };

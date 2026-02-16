@@ -68,7 +68,7 @@ function SortablePanel({
         onRemove={onRemove}
         onExpand={onExpand}
         isDragging={isDragging}
-        attributes={attributes}
+        attributes={attributes as unknown as Record<string, unknown>}
         listeners={listeners}
       />
     </div>

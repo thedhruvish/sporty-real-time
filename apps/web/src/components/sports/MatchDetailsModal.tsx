@@ -194,7 +194,7 @@ export function MatchDetailsModal({
         {/* Header */}
         <div
           className={cn(
-            "sticky top-0 z-10 p-6 text-white",
+            "sticky top-0 z-10 p-6 ",
             isLive
               ? "bg-gradient-to-r from-red-500 to-red-600"
               : isFinished
@@ -206,19 +206,19 @@ export function MatchDetailsModal({
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-4 right-4 h-8 w-8 text-white hover:bg-white/20"
+            className="absolute top-4 right-4 h-8 w-8  hover:bg-white/20"
             onClick={onClose}
           >
             <X className="h-5 w-5" />
           </Button>
 
           {/* League Info */}
-          <div className="mb-4 flex items-center gap-2 text-sm text-white/80">
+          <div className="mb-4 flex items-center gap-2 text-sm /80">
             {sport && (
               <>
                 <Award className="h-4 w-4" />
                 <span>{sport.name}</span>
-                <span className="text-white/50">•</span>
+                <span className="/50">•</span>
               </>
             )}
             {league && (
@@ -226,7 +226,7 @@ export function MatchDetailsModal({
                 <span>{league.name}</span>
                 {league.country && (
                   <>
-                    <span className="text-white/50">•</span>
+                    <span className="/50">•</span>
                     <span>{league.country}</span>
                   </>
                 )}
@@ -236,7 +236,7 @@ export function MatchDetailsModal({
 
           {/* Status Badge */}
           <div className="mb-4 flex items-center gap-3">
-            <Badge className={cn("border-0 text-white", status.bg)}>
+            <Badge className={cn("border-0 ", status.bg)}>
               {isLive && (
                 <span className="relative mr-2 flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
@@ -253,22 +253,22 @@ export function MatchDetailsModal({
             {/* Team A */}
             <div className="flex flex-1 flex-col items-center">
               <div className="mb-2 flex h-20 w-20 items-center justify-center rounded-full bg-white/20">
-                <span className="font-bold text-2xl text-white">
+                <span className="font-bold text-2xl ">
                   {teamA?.shortCode?.slice(0, 3).toUpperCase() || "TA"}
                 </span>
               </div>
-              <span className="text-center font-semibold text-lg text-white">
+              <span className="text-center font-semibold text-lg ">
                 {teamA?.name || "Team A"}
               </span>
             </div>
 
             {/* Score */}
             <div className="flex items-center gap-4 px-6">
-              <span className="font-bold text-5xl text-white tabular-nums">
+              <span className="font-bold text-5xl  tabular-nums">
                 {match.score?.teamA ?? 0}
               </span>
-              <span className="text-2xl text-white/50">-</span>
-              <span className="font-bold text-5xl text-white tabular-nums">
+              <span className="text-2xl /50">-</span>
+              <span className="font-bold text-5xl  tabular-nums">
                 {match.score?.teamB ?? 0}
               </span>
             </div>
@@ -276,11 +276,11 @@ export function MatchDetailsModal({
             {/* Team B */}
             <div className="flex flex-1 flex-col items-center">
               <div className="mb-2 flex h-20 w-20 items-center justify-center rounded-full bg-white/20">
-                <span className="font-bold text-2xl text-white">
+                <span className="font-bold text-2xl ">
                   {teamB?.shortCode?.slice(0, 3).toUpperCase() || "TB"}
                 </span>
               </div>
-              <span className="text-center font-semibold text-lg text-white">
+              <span className="text-center font-semibold text-lg ">
                 {teamB?.name || "Team B"}
               </span>
             </div>
