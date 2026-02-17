@@ -170,7 +170,7 @@ export function MatchDetailsModal({
           return "bg-orange-50 border-l-4 border-l-orange-500";
       }
     }
-    return "bg-white hover:bg-orange-50/50";
+    return " hover:bg-orange-50/50";
   };
 
   const status = getStatusDisplay();
@@ -196,17 +196,17 @@ export function MatchDetailsModal({
           className={cn(
             "sticky top-0 z-10 p-6 ",
             isLive
-              ? "bg-gradient-to-r from-red-500 to-red-600"
+              ? "bg-linear-to-r from-red-500 to-red-600"
               : isFinished
-                ? "bg-gradient-to-r from-gray-500 to-gray-600"
-                : "bg-gradient-to-r from-primary/80 to-primary",
+                ? "bg-linear-to-r from-gray-500 to-gray-600"
+                : "bg-linear-to-r from-primary/80 to-primary",
           )}
         >
           {/* Close Button */}
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-4 right-4 h-8 w-8  hover:bg-white/20"
+            className="absolute top-4 right-4 h-8 w-8  hover:/20"
             onClick={onClose}
           >
             <X className="h-5 w-5" />
@@ -239,8 +239,8 @@ export function MatchDetailsModal({
             <Badge className={cn("border-0 ", status.bg)}>
               {isLive && (
                 <span className="relative mr-2 flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-white" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full  opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full " />
                 </span>
               )}
               {status.label}
@@ -252,7 +252,7 @@ export function MatchDetailsModal({
           <div className="flex items-center justify-between">
             {/* Team A */}
             <div className="flex flex-1 flex-col items-center">
-              <div className="mb-2 flex h-20 w-20 items-center justify-center rounded-full bg-white/20">
+              <div className="mb-2 flex h-20 w-20 items-center justify-center rounded-full /20">
                 <span className="font-bold text-2xl ">
                   {teamA?.shortCode?.slice(0, 3).toUpperCase() || "TA"}
                 </span>
@@ -275,7 +275,7 @@ export function MatchDetailsModal({
 
             {/* Team B */}
             <div className="flex flex-1 flex-col items-center">
-              <div className="mb-2 flex h-20 w-20 items-center justify-center rounded-full bg-white/20">
+              <div className="mb-2 flex h-20 w-20 items-center justify-center rounded-full /20">
                 <span className="font-bold text-2xl ">
                   {teamB?.shortCode?.slice(0, 3).toUpperCase() || "TB"}
                 </span>
@@ -380,49 +380,51 @@ export function MatchDetailsModal({
                   )}
                 </div>
               ) : (
-                <div className="space-y-2">
-                  {liveEvents
-                    .sort((a, b) => b.eventSequence - a.eventSequence)
-                    .map((event) => (
-                      <div
-                        key={event.id}
-                        className={cn(
-                          "rounded-lg border border-orange-100 p-3 transition-colors",
-                          getEventBackground(
-                            event.eventType,
-                            event.isHighlight,
-                          ),
-                        )}
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className="mt-0.5">
-                            {getEventIcon(event.eventType)}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="mb-1 flex items-center gap-2">
-                              <span className="font-semibold text-orange-600 text-sm">
-                                {event.eventSequence}'
-                              </span>
-                              <Badge
-                                variant="outline"
-                                className="border-orange-200 text-orange-600 text-xs capitalize"
-                              >
-                                {event.eventType.replace("_", " ")}
-                              </Badge>
-                              {event.isHighlight && (
-                                <Badge className="border-0 bg-orange-100 text-orange-700 text-xs">
-                                  Highlight
-                                </Badge>
-                              )}
+                <ScrollArea className="h-[300px] rounded-md border border-orange-100 p-2">
+                  <div className="space-y-2">
+                    {liveEvents
+                      .sort((a, b) => b.eventSequence - a.eventSequence)
+                      .map((event) => (
+                        <div
+                          key={event.id}
+                          className={cn(
+                            "rounded-lg border border-orange-100 p-3 transition-colors",
+                            getEventBackground(
+                              event.eventType,
+                              event.isHighlight,
+                            ),
+                          )}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="mt-0.5">
+                              {getEventIcon(event.eventType)}
                             </div>
-                            <p className="text-orange-800 text-sm">
-                              {event.message}
-                            </p>
+                            <div className="min-w-0 flex-1">
+                              <div className="mb-1 flex items-center gap-2">
+                                <span className="font-semibold text-orange-600 text-sm">
+                                  {event.eventSequence}'
+                                </span>
+                                <Badge
+                                  variant="outline"
+                                  className="border-orange-200 text-orange-600 text-xs capitalize"
+                                >
+                                  {event.eventType.replace("_", " ")}
+                                </Badge>
+                                {event.isHighlight && (
+                                  <Badge className="border-0 bg-orange-100 text-orange-700 text-xs">
+                                    Highlight
+                                  </Badge>
+                                )}
+                              </div>
+                              <p className="text-orange-800 text-sm">
+                                {event.message}
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                </div>
+                      ))}
+                  </div>
+                </ScrollArea>
               )}
             </div>
           </div>

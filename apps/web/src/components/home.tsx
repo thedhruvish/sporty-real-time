@@ -91,191 +91,197 @@ export function Home() {
 
       <main
         className={cn(
-          "container mx-auto flex-1 px-4 py-6 transition-all duration-300",
-          isPanelOpen && "mr-0 lg:mr-96",
+          "flex-1 transition-all duration-300",
+       
         )}
       >
-        {/* Page Title */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="font-bold font-serif text-2xl text-orange-900 md:text-3xl">
-                Live Sports Scores
-              </h1>
-              <p className="mt-1 text-orange-600">
-                Stay updated with real-time match scores and events
-              </p>
-            </div>
+        <div className="container mx-auto px-4 py-6">
+          {/* Page Title */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="font-bold font-serif text-2xl text-orange-900 md:text-3xl">
+                  Live Sports Scores
+                </h1>
+                <p className="mt-1 text-orange-600">
+                  Stay updated with real-time match scores and events
+                </p>
+              </div>
 
-            {/* Toggle Panel Button - Mobile */}
-            <Button
-              variant="outline"
-              className="border-orange-200 text-orange-700 lg:hidden"
-              onClick={() => setIsPanelOpen(!isPanelOpen)}
-            >
-              <PanelRightOpen className="mr-2 h-4 w-4" />
-              Watch Panel
-            </Button>
+              {/* Toggle Panel Button - Mobile */}
+              <Button
+                variant="outline"
+                className="border-orange-200 text-orange-700 lg:hidden"
+                onClick={() => setIsPanelOpen(!isPanelOpen)}
+              >
+                <PanelRightOpen className="mr-2 h-4 w-4" />
+                Watch Panel
+              </Button>
+            </div>
           </div>
+
+          {/* Tabs for different match statuses */}
+          <Tabs defaultValue="live" className="w-full">
+            <TabsList className="mb-6 border border-orange-200 bg-orange-100/50 p-1">
+              <TabsTrigger
+                value="live"
+                className="gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              >
+                <Radio className="h-4 w-4" />
+                Live
+                {liveMatches.length > 0 && (
+                  <Badge
+                    variant="default"
+                    className="ml-1 bg-red-500 text-white"
+                  >
+                    {liveMatches.length}
+                  </Badge>
+                )}
+              </TabsTrigger>
+              <TabsTrigger
+                value="scheduled"
+                className="gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              >
+                <Calendar className="h-4 w-4" />
+                Scheduled
+                {scheduledMatches.length > 0 && (
+                  <Badge
+                    variant="secondary"
+                    className="ml-1 bg-orange-100 text-orange-700"
+                  >
+                    {scheduledMatches.length}
+                  </Badge>
+                )}
+              </TabsTrigger>
+              <TabsTrigger
+                value="finished"
+                className="gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              >
+                <CheckCircle className="h-4 w-4" />
+                Finished
+                {finishedMatches.length > 0 && (
+                  <Badge
+                    variant="secondary"
+                    className="ml-1 bg-orange-100 text-orange-700"
+                  >
+                    {finishedMatches.length}
+                  </Badge>
+                )}
+              </TabsTrigger>
+              <TabsTrigger
+                value="all"
+                className="gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              >
+                <Trophy className="h-4 w-4" />
+                All
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Loading State */}
+            {isLoading ? (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {[...Array(6)].map((_, i) => (
+                  <MatchCardSkeleton key={i.toString()} />
+                ))}
+              </div>
+            ) : (
+              <>
+                {/* Live Matches */}
+                <TabsContent value="live" className="mt-0">
+                  {liveMatches.length === 0 ? (
+                    <EmptyState
+                      icon={<Radio className="h-12 w-12" />}
+                      title="No Live Matches"
+                      description="There are no matches currently in progress. Check back later!"
+                    />
+                  ) : (
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                      {liveMatches.map((match) => (
+                        <MatchCard
+                          key={match.id}
+                          match={match}
+                          onShowDetails={handleShowDetails}
+                          onSubscribe={handleSubscribe}
+                          isSubscribed={isSubscribed(match.id)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </TabsContent>
+
+                {/* Scheduled Matches */}
+                <TabsContent value="scheduled" className="mt-0">
+                  {scheduledMatches.length === 0 ? (
+                    <EmptyState
+                      icon={<Calendar className="h-12 w-12" />}
+                      title="No Scheduled Matches"
+                      description="No upcoming matches scheduled at the moment."
+                    />
+                  ) : (
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                      {scheduledMatches.map((match) => (
+                        <MatchCard
+                          key={match.id}
+                          match={match}
+                          onShowDetails={handleShowDetails}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </TabsContent>
+
+                {/* Finished Matches */}
+                <TabsContent value="finished" className="mt-0">
+                  {finishedMatches.length === 0 ? (
+                    <EmptyState
+                      icon={<CheckCircle className="h-12 w-12" />}
+                      title="No Finished Matches"
+                      description="No completed matches to display."
+                    />
+                  ) : (
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                      {finishedMatches.map((match) => (
+                        <MatchCard
+                          key={match.id}
+                          match={match}
+                          onShowDetails={handleShowDetails}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </TabsContent>
+
+                {/* All Matches */}
+                <TabsContent value="all" className="mt-0">
+                  {matches.length === 0 ? (
+                    <EmptyState
+                      icon={<Trophy className="h-12 w-12" />}
+                      title="No Matches"
+                      description="No matches available at the moment."
+                    />
+                  ) : (
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                      {matches.map((match) => (
+                        <MatchCard
+                          key={match.id}
+                          match={match}
+                          onShowDetails={handleShowDetails}
+                          onSubscribe={
+                            match.status === "live" ||
+                            match.status === "halftime"
+                              ? handleSubscribe
+                              : undefined
+                          }
+                          isSubscribed={isSubscribed(match.id)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </TabsContent>
+              </>
+            )}
+          </Tabs>
         </div>
-
-        {/* Tabs for different match statuses */}
-        <Tabs defaultValue="live" className="w-full">
-          <TabsList className="mb-6 border border-orange-200 bg-orange-100/50 p-1">
-            <TabsTrigger
-              value="live"
-              className="gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
-            >
-              <Radio className="h-4 w-4" />
-              Live
-              {liveMatches.length > 0 && (
-                <Badge variant="default" className="ml-1 bg-red-500 text-white">
-                  {liveMatches.length}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger
-              value="scheduled"
-              className="gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
-            >
-              <Calendar className="h-4 w-4" />
-              Scheduled
-              {scheduledMatches.length > 0 && (
-                <Badge
-                  variant="secondary"
-                  className="ml-1 bg-orange-100 text-orange-700"
-                >
-                  {scheduledMatches.length}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger
-              value="finished"
-              className="gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
-            >
-              <CheckCircle className="h-4 w-4" />
-              Finished
-              {finishedMatches.length > 0 && (
-                <Badge
-                  variant="secondary"
-                  className="ml-1 bg-orange-100 text-orange-700"
-                >
-                  {finishedMatches.length}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger
-              value="all"
-              className="gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
-            >
-              <Trophy className="h-4 w-4" />
-              All
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Loading State */}
-          {isLoading ? (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {[...Array(6)].map((_, i) => (
-                <MatchCardSkeleton key={i.toString()} />
-              ))}
-            </div>
-          ) : (
-            <>
-              {/* Live Matches */}
-              <TabsContent value="live" className="mt-0">
-                {liveMatches.length === 0 ? (
-                  <EmptyState
-                    icon={<Radio className="h-12 w-12" />}
-                    title="No Live Matches"
-                    description="There are no matches currently in progress. Check back later!"
-                  />
-                ) : (
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    {liveMatches.map((match) => (
-                      <MatchCard
-                        key={match.id}
-                        match={match}
-                        onShowDetails={handleShowDetails}
-                        onSubscribe={handleSubscribe}
-                        isSubscribed={isSubscribed(match.id)}
-                      />
-                    ))}
-                  </div>
-                )}
-              </TabsContent>
-
-              {/* Scheduled Matches */}
-              <TabsContent value="scheduled" className="mt-0">
-                {scheduledMatches.length === 0 ? (
-                  <EmptyState
-                    icon={<Calendar className="h-12 w-12" />}
-                    title="No Scheduled Matches"
-                    description="No upcoming matches scheduled at the moment."
-                  />
-                ) : (
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    {scheduledMatches.map((match) => (
-                      <MatchCard
-                        key={match.id}
-                        match={match}
-                        onShowDetails={handleShowDetails}
-                      />
-                    ))}
-                  </div>
-                )}
-              </TabsContent>
-
-              {/* Finished Matches */}
-              <TabsContent value="finished" className="mt-0">
-                {finishedMatches.length === 0 ? (
-                  <EmptyState
-                    icon={<CheckCircle className="h-12 w-12" />}
-                    title="No Finished Matches"
-                    description="No completed matches to display."
-                  />
-                ) : (
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    {finishedMatches.map((match) => (
-                      <MatchCard
-                        key={match.id}
-                        match={match}
-                        onShowDetails={handleShowDetails}
-                      />
-                    ))}
-                  </div>
-                )}
-              </TabsContent>
-
-              {/* All Matches */}
-              <TabsContent value="all" className="mt-0">
-                {matches.length === 0 ? (
-                  <EmptyState
-                    icon={<Trophy className="h-12 w-12" />}
-                    title="No Matches"
-                    description="No matches available at the moment."
-                  />
-                ) : (
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    {matches.map((match) => (
-                      <MatchCard
-                        key={match.id}
-                        match={match}
-                        onShowDetails={handleShowDetails}
-                        onSubscribe={
-                          match.status === "live" || match.status === "halftime"
-                            ? handleSubscribe
-                            : undefined
-                        }
-                        isSubscribed={isSubscribed(match.id)}
-                      />
-                    ))}
-                  </div>
-                )}
-              </TabsContent>
-            </>
-          )}
-        </Tabs>
       </main>
 
       <Footer />
