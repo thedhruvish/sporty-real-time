@@ -4,8 +4,8 @@ export class ApiResponse<T> {
   constructor(
     public readonly statusCode: number,
     public readonly message: string,
-    public readonly data: T,
     public readonly success: boolean,
+    public readonly data?: T,
   ) {}
 }
 
@@ -30,12 +30,19 @@ export class ApiError extends Error {
     }
   }
 }
-
+/**
+ *
+ * @param res Request Object
+ * @param statusCode Statuscode
+ * @param message Message to send a client
+ * @param data Json data
+ * @returns void
+ */
 export const sendResponse = <T>(
   res: Response,
   statusCode: number,
   message: string,
-  data: T,
+  data?: T,
 ) => {
   return res
     .status(statusCode)
@@ -43,8 +50,8 @@ export const sendResponse = <T>(
       new ApiResponse<T>(
         statusCode,
         message,
-        data,
         statusCode >= 200 && statusCode < 300,
+        data,
       ),
     );
 };

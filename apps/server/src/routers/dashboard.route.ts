@@ -1,8 +1,13 @@
 import { Router } from "express";
-import { getHomeDashboardHandler } from "@/constrollers/dashboard.controller.js";
+import {
+  getHomeDashboardHandler,
+  resetDBHandler,
+} from "@/constrollers/dashboard.controller.js";
 
 const router: Router = Router();
 
 router.get("/home", getHomeDashboardHandler);
+
+router.delete("/reset", resetDBHandler);
 
 export default router;

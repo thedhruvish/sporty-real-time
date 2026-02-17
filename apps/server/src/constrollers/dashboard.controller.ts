@@ -1,5 +1,5 @@
 import { db, desc } from "@sporty/db";
-import { liveEvents, matches } from "@sporty/db/schema";
+import { leagues, liveEvents, matches, sports, teams } from "@sporty/db/schema";
 import type { Request, Response } from "express";
 import { sendResponse } from "@/utils/Api-response";
 
@@ -27,4 +27,13 @@ export const getHomeDashboardHandler = async (_req: Request, res: Response) => {
     matches: matchesData,
     liveEvents: liveEventsData,
   });
+};
+
+export const resetDBHandler = async (_req: Request, res: Response) => {
+  await db.delete(liveEvents);
+  await db.delete(matches);
+  await db.delete(teams);
+  await db.delete(leagues);
+  await db.delete(sports);
+  return sendResponse(res, 200, "Database reset successfully");
 };
