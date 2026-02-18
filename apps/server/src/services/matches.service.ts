@@ -1,7 +1,9 @@
+import { ServerWsEvent } from "@sporty/inter-types/ws";
 import type { InferInsertModel, InferSelectModel } from "@sporty/db";
 import { db, eq } from "@sporty/db";
 import { matches } from "@sporty/db/schema";
 import { ApiError } from "@/utils/Api-response";
+import { wsHelper } from "@/index";
 
 export type Match = InferSelectModel<typeof matches>;
 export type MatchCreate = InferInsertModel<typeof matches>;
@@ -26,6 +28,16 @@ export const createMatch = async (data: MatchCreate): Promise<Match> => {
   if (!match) {
     throw notFound("Match not found");
   }
+
+  wsHelper.broadcast({
+    event: ServerWsEvent.MATCH_UPDATE,
+    data: {
+      matchId: match.id,
+      payload: match,
+      isHighlight: false,
+    },
+  });
+
   return match;
 };
 
@@ -41,6 +53,16 @@ export const updateMatch = async (
   if (!match) {
     throw notFound(id);
   }
+
+  wsHelper.broadcast({
+    event: ServerWsEvent.MATCH_UPDATE,
+    data: {
+      matchId: match.id,
+      payload: match,
+      isHighlight: false,
+    },
+  });
+
   return match;
 };
 

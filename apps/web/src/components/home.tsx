@@ -5,7 +5,7 @@ import {
   Radio,
   Trophy,
 } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   type DashboardResponse,
   dashboardKey,
@@ -35,7 +35,13 @@ import {
 import { toast } from "sonner";
 import { getEventIcon } from "./sports/event-utils";
 
-export function Home() {
+export function Home({
+  panelOpen,
+  togglePanel,
+}: {
+  panelOpen: boolean;
+  togglePanel: () => void;
+}) {
   const queryClient = useQueryClient();
 
   const { isConnected, sendMessage, close, status } = useWebSocket({
@@ -121,13 +127,33 @@ export function Home() {
           },
         );
       }
+
+      if (data.event === ServerWsEvent.MATCH_UPDATE) {
+        const match = data.data.payload as Match;
+        toast.info(`Match Status Updated: ${match.status.toUpperCase()}`, {
+          description: `${match.teamA?.shortCode} vs ${match.teamB?.shortCode}`,
+          icon: <Trophy className="h-4 w-4 text-orange-500" />,
+        });
+
+        queryClient.setQueryData<DashboardResponse>(
+          dashboardKey.home(),
+          (old) => {
+            if (!old) return old;
+            return {
+              ...old,
+              matches: old.matches.map((m) =>
+                m.id === match.id ? { ...m, status: match.status } : m,
+              ),
+            };
+          },
+        );
+      }
     },
     reconnect: true,
     reconnectInterval: 5000,
   });
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const [isPanelOpen, setIsPanelOpen] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const { subscribe, unsubscribe, isSubscribed } = useSubscriptionsStore();
@@ -142,6 +168,20 @@ export function Home() {
     await refetch();
     setIsRefreshing(false);
   }, [refetch]);
+
+  // Sync subscriptions with available matches
+  useEffect(() => {
+    if (matches.length > 0) {
+      const { subscribedMatches, unsubscribe } =
+        useSubscriptionsStore.getState();
+      subscribedMatches.forEach((sm) => {
+        const matchExists = matches.find((m) => m.id === sm.match.id);
+        if (!matchExists) {
+          unsubscribe(sm.match.id);
+        }
+      });
+    }
+  }, [matches]);
 
   const handleShowDetails = useCallback(
     (match: Match) => {
@@ -221,8 +261,8 @@ export function Home() {
       <Header
         onRefresh={handleRefresh}
         isRefreshing={isRefreshing}
-        isPanelOpen={isPanelOpen}
-        onTogglePanel={() => setIsPanelOpen(!isPanelOpen)}
+        isPanelOpen={panelOpen}
+        onTogglePanel={togglePanel}
       />
 
       <main className={cn("flex-1 transition-all duration-300")}>
@@ -243,7 +283,7 @@ export function Home() {
               <Button
                 variant="outline"
                 className="border-orange-200 text-orange-700 lg:hidden"
-                onClick={() => setIsPanelOpen(!isPanelOpen)}
+                onClick={togglePanel}
               >
                 <PanelRightOpen className="mr-2 h-4 w-4" />
                 Watch Panel
@@ -419,8 +459,8 @@ export function Home() {
 
       {/* Subscription Panel - Right Side */}
       <SubscriptionPanel
-        isOpen={isPanelOpen}
-        onClose={() => setIsPanelOpen(false)}
+        isOpen={panelOpen}
+        onClose={togglePanel}
         liveEvents={liveEvents}
         onShowMatchDetails={handleShowDetails}
         sendMessage={sendMessage}

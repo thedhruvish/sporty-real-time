@@ -9,13 +9,14 @@ const postRequest = async <T>(
   urlPath: string,
   body: any,
   timeout = 5000,
+  method = "POST",
 ): Promise<T> => {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
 
   try {
     const response = await fetch(`${BASE_URL}/${urlPath}`, {
-      method: "POST",
+      method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
       signal: controller.signal,
@@ -74,6 +75,16 @@ const createMatch = (
     status: "live",
   });
 
+const matchStatusChange = (matchId: string, status: string) =>
+  postRequest(
+    `matches/${matchId}`,
+    {
+      status,
+    },
+    5000,
+    "PATCH",
+  );
+
 const createLiveEvent = (
   matchId: string,
   eventSequence: number,
@@ -92,6 +103,7 @@ const createLiveEvent = (
   });
 
 const EVENTS = [
+  "MATCH_UPDATE",
   "GOAL",
   "RED_CARD",
   "YELLOW_CARD",
@@ -107,6 +119,7 @@ const EVENTS = [
 ] as const;
 
 const EVENT_MESSAGES: Record<string, string> = {
+  MATCH_UPDATE: "Match Updated",
   GOAL: "Goal Scored",
   RED_CARD: "Red Card Issued",
   YELLOW_CARD: "Yellow Card Issued",
@@ -202,9 +215,19 @@ const main = async () => {
     process.exit(0);
   });
 
+  const blackListedMatches = new Set<string>();
+
   while (true) {
+    const activeMatches = matches.filter((m) => !blackListedMatches.has(m.id));
+
+    if (activeMatches.length === 0) {
+      console.log("All matches completed. Exiting...");
+      break;
+    }
+
     const eventType = EVENTS[Math.floor(Math.random() * EVENTS.length)];
-    const match = matches[Math.floor(Math.random() * matches.length)];
+    const match =
+      activeMatches[Math.floor(Math.random() * activeMatches.length)];
     console.log("Evenet Added......", eventType);
     await createLiveEvent(
       match.id,
@@ -214,6 +237,12 @@ const main = async () => {
       SCORE_META[Math.floor(Math.random() * SCORE_META.length)],
       Math.random() > 0.5,
     );
+
+    if (eventType === "MATCH_END") {
+      await matchStatusChange(match.id, "completed");
+      blackListedMatches.add(match.id);
+      console.log(`Match Completed: ${match.id}`);
+    }
 
     await sleep(500 + Math.random() * 1000);
   }
