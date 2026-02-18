@@ -194,7 +194,7 @@ export function MatchDetailsModal({
         {/* Header */}
         <div
           className={cn(
-            "sticky top-0 z-10 p-6 ",
+            "sticky top-0 z-10 p-6",
             isLive
               ? "bg-linear-to-r from-red-500 to-red-600"
               : isFinished
@@ -206,14 +206,14 @@ export function MatchDetailsModal({
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-4 right-4 h-8 w-8  hover:/20"
+            className="hover:/20 absolute top-4 right-4 h-8 w-8"
             onClick={onClose}
           >
             <X className="h-5 w-5" />
           </Button>
 
           {/* League Info */}
-          <div className="mb-4 flex items-center gap-2 text-sm /80">
+          <div className="/80 mb-4 flex items-center gap-2 text-sm">
             {sport && (
               <>
                 <Award className="h-4 w-4" />
@@ -236,11 +236,11 @@ export function MatchDetailsModal({
 
           {/* Status Badge */}
           <div className="mb-4 flex items-center gap-3">
-            <Badge className={cn("border-0 ", status.bg)}>
+            <Badge className={cn("border-0", status.bg)}>
               {isLive && (
                 <span className="relative mr-2 flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full  opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full " />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full" />
                 </span>
               )}
               {status.label}
@@ -252,35 +252,35 @@ export function MatchDetailsModal({
           <div className="flex items-center justify-between">
             {/* Team A */}
             <div className="flex flex-1 flex-col items-center">
-              <div className="mb-2 flex h-20 w-20 items-center justify-center rounded-full /20">
-                <span className="font-bold text-2xl ">
+              <div className="/20 mb-2 flex h-20 w-20 items-center justify-center rounded-full">
+                <span className="font-bold text-2xl">
                   {teamA?.shortCode?.slice(0, 3).toUpperCase() || "TA"}
                 </span>
               </div>
-              <span className="text-center font-semibold text-lg ">
+              <span className="text-center font-semibold text-lg">
                 {teamA?.name || "Team A"}
               </span>
             </div>
 
             {/* Score */}
             <div className="flex items-center gap-4 px-6">
-              <span className="font-bold text-5xl  tabular-nums">
+              <span className="font-bold text-5xl tabular-nums">
                 {match.score?.teamA ?? 0}
               </span>
-              <span className="text-2xl /50">-</span>
-              <span className="font-bold text-5xl  tabular-nums">
+              <span className="/50 text-2xl">-</span>
+              <span className="font-bold text-5xl tabular-nums">
                 {match.score?.teamB ?? 0}
               </span>
             </div>
 
             {/* Team B */}
             <div className="flex flex-1 flex-col items-center">
-              <div className="mb-2 flex h-20 w-20 items-center justify-center rounded-full /20">
-                <span className="font-bold text-2xl ">
+              <div className="/20 mb-2 flex h-20 w-20 items-center justify-center rounded-full">
+                <span className="font-bold text-2xl">
                   {teamB?.shortCode?.slice(0, 3).toUpperCase() || "TB"}
                 </span>
               </div>
-              <span className="text-center font-semibold text-lg ">
+              <span className="text-center font-semibold text-lg">
                 {teamB?.name || "Team B"}
               </span>
             </div>

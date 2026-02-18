@@ -84,21 +84,21 @@ export function SubscriptionPanel({
     <div
       className={cn(
         "fixed top-0 right-0 h-full w-80 md:w-96",
-        "border-orange-200 border-l bg-orange-50/98 backdrop-blur-sm",
+        "0 border-l  backdrop-blur-sm",
         "z-40 flex flex-col shadow-2xl",
         "transform transition-transform duration-300",
         "paper-texture",
       )}
     >
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-gradient-to-r from-orange-500 to-orange-600 p-4 text-white shadow-md">
+      <div className="sticky top-0 z-10 bg-gradient-to-r  shadow-md">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Radio className="h-5 w-5" />
             <span className="font-semibold">Watching</span>
             <Badge
               variant="secondary"
-              className="border-white/30 bg-white/20 text-white"
+              className="border-white/30 bg-white/20 "
             >
               {subscribedMatches.length}
             </Badge>
@@ -106,13 +106,13 @@ export function SubscriptionPanel({
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 text-white hover:bg-white/20"
+            className="h-8 w-8  hover:bg-white/20"
             onClick={onClose}
           >
             <X className="h-5 w-5" />
           </Button>
         </div>
-        <p className="mt-1 text-white/70 text-xs">
+        <p className="mt-1 /70 text-xs">
           Drag to reorder • Click to expand
         </p>
       </div>
@@ -254,7 +254,7 @@ function DraggableMatchPanel({
         className={cn(
           "flex items-center gap-2 px-3 py-2",
           isLive
-            ? "bg-linear-to-r from-red-500 to-red-600 text-white"
+            ? "bg-linear-to-r from-red-500 to-red-600 "
             : "bg-gradient-to-r from-orange-100 to-orange-50 text-orange-800",
         )}
       >
@@ -280,7 +280,7 @@ function DraggableMatchPanel({
               className={cn(
                 "h-6 w-6",
                 isLive
-                  ? "text-white hover:bg-white/20"
+                  ? " hover:bg-white/20"
                   : "text-orange-600 hover:bg-orange-100",
               )}
               onClick={onShowDetails}
@@ -293,7 +293,7 @@ function DraggableMatchPanel({
               className={cn(
                 "h-6 w-6",
                 isLive
-                  ? "text-white hover:bg-white/20"
+                  ? " hover:bg-white/20"
                   : "text-orange-600 hover:bg-orange-100",
               )}
               onClick={onUnsubscribe}

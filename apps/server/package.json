@@ -18,15 +18,18 @@
     "dotenv": "catalog:",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.3",
+    "ws": "^8.19.0",
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@sporty/inter-types": "workspace:*",
     "@sporty/config": "workspace:*",
     "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "catalog:",
+    "@types/ws": "^8.18.1",
     "tsdown": "^0.16.5",
     "tsx": "^4.19.2",
     "typescript": "catalog:"

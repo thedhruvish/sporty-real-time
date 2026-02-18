@@ -10,7 +10,6 @@ export interface User {
   updatedAt: string;
 }
 
-
 export const usersKey = {
   all: ["users"],
   list: () => [...usersKey.all, "list"],

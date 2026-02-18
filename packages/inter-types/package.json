@@ -1,0 +1,25 @@
+{
+  "name": "@sporty/inter-types",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./ws": {
+      "default": "./src/ws.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc -b"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@sporty/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

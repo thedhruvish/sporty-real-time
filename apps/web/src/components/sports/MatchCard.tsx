@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { Match } from "@/types/sports";
+import type { ClientWsMessage } from "@sporty/inter-types/ws";
 
 interface MatchCardProps {
   match: Match;

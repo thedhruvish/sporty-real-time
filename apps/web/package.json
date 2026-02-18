@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "@sporty/config": "workspace:*",
+    "@sporty/inter-types": "workspace:*",
     "@tanstack/react-router-devtools": "^1.141.1",
     "@tanstack/router-plugin": "^1.141.1",
     "@types/node": "catalog:",

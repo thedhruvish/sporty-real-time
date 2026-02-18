@@ -17,12 +17,21 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useWebSocket } from "@/hooks/use-websocket";
 import { cn } from "@/lib/utils";
 import { useSubscriptionsStore } from "@/stores/subscriptions-store";
 import type { Match } from "@/types/sports";
 import { MatchCardSkeleton } from "./match-card-skeleton";
+import { ClientWstEvent } from "@sporty/inter-types/ws";
 
 export function Home() {
+  const { isConnected, sendMessage, close, status } = useWebSocket({
+    onMessage: (data) => {
+      console.log(data);
+    },
+    reconnect: true,
+    reconnectInterval: 5000,
+  });
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isPanelOpen, setIsPanelOpen] = useState(true);
@@ -55,6 +64,12 @@ export function Home() {
     (match: Match) => {
       const matchEvents = liveEvents.filter((e) => e.matchId === match.id);
       subscribe(match, matchEvents);
+      sendMessage({
+        event: ClientWstEvent.SUBSCRIBE_MATCH,
+        data: {
+          matchId: match.id,
+        },
+      });
     },
     [liveEvents, subscribe],
   );
@@ -62,8 +77,14 @@ export function Home() {
   const handleUnsubscribe = useCallback(
     (matchId: string) => {
       unsubscribe(matchId);
+      sendMessage({
+        event: ClientWstEvent.UNSUBSCRIBE_MATCH,
+        data: {
+          matchId,
+        },
+      });
     },
-    [unsubscribe],
+    [unsubscribe, sendMessage],
   );
 
   const getMatchEvents = useCallback(
@@ -89,19 +110,14 @@ export function Home() {
         onTogglePanel={() => setIsPanelOpen(!isPanelOpen)}
       />
 
-      <main
-        className={cn(
-          "flex-1 transition-all duration-300",
-       
-        )}
-      >
+      <main className={cn("flex-1 transition-all duration-300")}>
         <div className="container mx-auto px-4 py-6">
           {/* Page Title */}
           <div className="mb-6">
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="font-bold font-serif text-2xl text-orange-900 md:text-3xl">
-                  Live Sports Scores
+                  Live Sports Scores {status}
                 </h1>
                 <p className="mt-1 text-orange-600">
                   Stay updated with real-time match scores and events

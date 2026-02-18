@@ -62,6 +62,7 @@ export interface Match {
 }
 
 export type EventType =
+  | "score"
   | "goal"
   | "penalty"
   | "own_goal"
