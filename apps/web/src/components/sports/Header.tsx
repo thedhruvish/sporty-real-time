@@ -15,6 +15,9 @@ interface HeaderProps {
   isRefreshing?: boolean;
   isPanelOpen?: boolean;
   onTogglePanel?: () => void;
+  onLogin?: () => void;
+  user?: { name: string; email: string } | null;
+  onLogout?: () => void;
 }
 
 export function Header({
@@ -22,11 +25,14 @@ export function Header({
   isRefreshing,
   isPanelOpen,
   onTogglePanel,
+  onLogin,
+  user,
+  onLogout,
 }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="paper-texture sticky top-0 z-50 w-full border-border border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+    <header className="paper-texture sticky top-0 z-50 w-full border-border border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -84,6 +90,34 @@ export function Header({
                   className={cn("h-5 w-5", isRefreshing && "animate-spin")}
                 />
               </Button>
+            )}
+
+            {/* User Menu */}
+            {user ? (
+              <div className="flex items-center gap-2">
+                <span className="hidden text-sm font-medium text-muted-foreground md:inline-block">
+                  {user.name}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={onLogout}
+                  className="text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                >
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              onLogin && (
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={onLogin}
+                  className="bg-orange-600 text-white hover:bg-orange-700"
+                >
+                  Login
+                </Button>
+              )
             )}
 
             {/* Mobile Menu Button */}

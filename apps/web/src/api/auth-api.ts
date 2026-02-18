@@ -26,7 +26,7 @@ export const authKey = {
   webSocketToken: ["token"],
 };
 
-const authApi = {
+export const authApi = {
   login: (data: LoginRequest) => {
     return axiosClient.post<AuthResponse>("/auth/login", data);
   },

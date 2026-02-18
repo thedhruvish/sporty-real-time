@@ -23,6 +23,7 @@ export const errorMiddleware = (
   };
 
   if (isDev) {
+    console.log(err);
     response.stack = err.stack;
   }
 

@@ -34,6 +34,9 @@ import { useSubscriptionsStore } from "@/stores/subscriptions-store";
 import type { LiveEvent, Match } from "@/types/sports";
 import { MatchCardSkeleton } from "./match-card-skeleton";
 import { getEventIcon } from "./sports/event-utils";
+import { useAuthStore } from "@/stores/auth-store";
+import { AuthModal } from "@/components/auth/auth-modal";
+import { useWebSocketToken } from "@/api/auth-api";
 
 export function Home({
   panelOpen,
@@ -43,6 +46,27 @@ export function Home({
   togglePanel: () => void;
 }) {
   const queryClient = useQueryClient();
+  const { isAuthenticated, token: authToken, logout, user } = useAuthStore();
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  // Fetch WebSocket token if authenticated
+  const { mutateAsync: getWsToken } = useWebSocketToken();
+  const [wsToken, setWsToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      getWsToken()
+        .then((res) => {
+          if (res.token) setWsToken(res.token);
+        })
+        .catch(() => {
+          // If token fetch fails, maybe logout or handle error
+          console.error("Failed to fetch WS token");
+        });
+    } else {
+      setWsToken(null);
+    }
+  }, [isAuthenticated, getWsToken]);
 
   const { sendMessage, status } = useWebSocket({
     onMessage: (data: ServerWsMessage) => {
@@ -186,6 +210,10 @@ export function Home({
 
   const handleShowDetails = useCallback(
     (match: Match) => {
+      if (!isAuthenticated) {
+        setIsAuthModalOpen(true);
+        return;
+      }
       sendMessage({
         event: ClientWstEvent.SUBSCRIBE_MATCH,
         data: {
@@ -211,13 +239,19 @@ export function Home({
   }, [selectedMatch, sendMessage]);
 
   const handleSubscribe = useCallback(
-    (match: Match) => {
+    async (match: Match) => {
+      if (!isAuthenticated) {
+        setIsAuthModalOpen(true);
+        return;
+      }
+
       const { subscribedMatches } = useSubscriptionsStore.getState();
 
       if (subscribedMatches.length >= 3) {
         toast.error("Only three subscrible are the allowed ...");
         return;
       }
+
       const matchEvents = liveEvents.filter((e) => e.matchId === match.id);
       subscribe(match, matchEvents);
       sendMessage({
@@ -227,7 +261,7 @@ export function Home({
         },
       });
     },
-    [liveEvents, subscribe, sendMessage],
+    [liveEvents, subscribe, sendMessage, isAuthenticated],
   );
 
   const handleUnsubscribe = useCallback(
@@ -264,6 +298,9 @@ export function Home({
         isRefreshing={isRefreshing}
         isPanelOpen={panelOpen}
         onTogglePanel={togglePanel}
+        onLogin={() => setIsAuthModalOpen(true)}
+        user={user}
+        onLogout={logout}
       />
 
       <main className={cn("flex-1 transition-all duration-300")}>
@@ -467,7 +504,6 @@ export function Home({
         sendMessage={sendMessage}
       />
 
-      {/* Match Details Modal */}
       <MatchDetailsModal
         match={selectedMatch}
         isOpen={isDetailsModalOpen}
@@ -475,6 +511,11 @@ export function Home({
         liveEvents={selectedMatch ? getMatchEvents(selectedMatch.id) : []}
         onSubscribe={handleSubscribe}
         onUnsubscribe={handleUnsubscribe}
+      />
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
       />
     </div>
   );

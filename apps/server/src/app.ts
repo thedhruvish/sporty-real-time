@@ -1,6 +1,7 @@
 import { env } from "@sporty/env/server";
 import cors from "cors";
 import express, { type Express } from "express";
+import cookieParser from "cookie-parser";
 import { errorMiddleware } from "@/middlewares/globe-error.middleware.js";
 import authRouter from "@/routers/auth.route.js";
 import dashboardRouter from "@/routers/dashboard.route.js";
@@ -20,7 +21,7 @@ app.use(
     credentials: true,
   }),
 );
-
+app.use(cookieParser());
 app.use(express.json());
 
 app.get("/", (_req, res) => {

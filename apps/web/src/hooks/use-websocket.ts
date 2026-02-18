@@ -1,3 +1,5 @@
+import { authApi } from "@/api/auth-api";
+import { useAuthStore } from "@/stores/auth-store";
 import type { ClientWsMessage, ServerWsMessage } from "@sporty/inter-types/ws";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -19,15 +21,23 @@ export const useWebSocket = ({
   const socketRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [status, setStatus] = useState<WebSocketStatus>("CONNECTING");
+  const { isAuthenticated } = useAuthStore();
 
-  const connect = useCallback(() => {
-    if (socketRef.current) {
+  const connect = useCallback(async () => {
+    if (socketRef.current || !isAuthenticated) {
       return;
     }
-    const socket = new WebSocket(ENDPOINT);
+
+    const { token } = await authApi.webSocketToken();
+    const url = new URL(ENDPOINT);
+    if (token) {
+      url.searchParams.append("token", token);
+    }
+    console.log(url.toString());
+    const socket = new WebSocket(url.toString());
     socketRef.current = socket;
 
-    setStatus("OPEN");
+    setStatus(WebSocket.OPEN ? "OPEN" : "CONNECTING");
     socket.addEventListener("message", (event) => {
       let data: ServerWsMessage;
       try {

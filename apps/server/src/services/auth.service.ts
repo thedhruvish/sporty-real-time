@@ -80,13 +80,15 @@ export const getUser = async (id: string) => {
   return sanitizeUser(user);
 };
 
-export const generateSocketToken = (user: { id: string; email: string }) => {
+export const generateSocketToken = (user: { sub: string; email: string }) => {
+  console.log("run this is the here");
   const secret = process.env.JWT_SECRET;
   if (!secret) {
     throw new ApiError(500, "JWT secret not configured");
   }
-  return jwt.sign(user, secret, {
-    expiresIn: "1d",
+
+  return jwt.sign({ sub: user.sub, email: user.email }, secret, {
+    expiresIn: "24h",
   });
 };
 
