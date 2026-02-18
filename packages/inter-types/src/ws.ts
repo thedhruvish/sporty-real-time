@@ -25,6 +25,7 @@ export enum ServerWsEvent {
   HALFTIME = "HALFTIME",
   SECOND_HALF_START = "SECOND_HALF_START",
   OWN_GOAL = "OWN_GOAL",
+  SCORE_UPDATE = "SCORE_UPDATE",
 }
 
 export type ServerWsMessage = {
@@ -35,3 +36,4 @@ export type ServerWsMessage = {
     isHighlight: boolean;
   };
 };
+

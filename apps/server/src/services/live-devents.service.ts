@@ -50,14 +50,25 @@ export const createLiveEvent = async (
     throw notFound("Live event not found");
   }
 
-  sendToMatch(event.matchId, {
-    event: event.eventType as ServerWsEvent,
-    data: {
-      matchId: event.matchId,
-      payload: event,
-      isHighlight: event.isHighlight ?? false,
-    },
-  });
+  if (event.eventType === "SCORE_UPDATE") {
+    wsHelper.broadcast({
+      event: ServerWsEvent.SCORE_UPDATE,
+      data: {
+        matchId: event.matchId,
+        payload: event,
+        isHighlight: event.isHighlight ?? false,
+      },
+    });
+  } else {
+    sendToMatch(event.matchId, {
+      event: event.eventType as ServerWsEvent,
+      data: {
+        matchId: event.matchId,
+        payload: event,
+        isHighlight: event.isHighlight ?? false,
+      },
+    });
+  }
 
   return event;
 };

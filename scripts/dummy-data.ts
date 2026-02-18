@@ -103,6 +103,7 @@ const EVENTS = [
   "HALFTIME",
   "SECOND_HALF_START",
   "OWN_GOAL",
+  "SCORE_UPDATE",
 ] as const;
 
 const EVENT_MESSAGES: Record<string, string> = {
@@ -117,10 +118,11 @@ const EVENT_MESSAGES: Record<string, string> = {
   HALFTIME: "Halftime",
   SECOND_HALF_START: "Second Half Started",
   OWN_GOAL: "Own Goal",
+  SCORE_UPDATE: "Score Update",
 };
 
 const SCORE_META = Array.from({ length: 10 }, (_, i) => ({
-  score: `${i + 1}-0`,
+  score: `${i + 1}-${Math.floor(Math.random() * 10)}`,
 }));
 
 const main = async () => {
@@ -223,10 +225,4 @@ const resetDB = async () => {
   });
 };
 
-const args = process.argv;
-if (args[2] === "reset") {
-  console.log("Data SuccessFully Reset");
-  resetDB();
-} else {
-  main().catch(console.error);
-}
+resetDB().then(main).catch(console.error);

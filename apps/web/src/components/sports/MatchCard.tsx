@@ -1,5 +1,5 @@
 import { Calendar, Check, Clock, Eye, Plus, Radio } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -22,6 +22,23 @@ export function MatchCard({
   isSubscribed,
 }: MatchCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [isScoreChanged, setIsScoreChanged] = useState(false);
+  const prevScoreRef = useRef(match.score);
+
+  useEffect(() => {
+    const prevScore = prevScoreRef.current;
+    const currentScore = match.score;
+
+    if (
+      prevScore?.teamA !== currentScore?.teamA ||
+      prevScore?.teamB !== currentScore?.teamB
+    ) {
+      setIsScoreChanged(true);
+      const timer = setTimeout(() => setIsScoreChanged(false), 2000); // 2 seconds highlight
+      return () => clearTimeout(timer);
+    }
+    prevScoreRef.current = currentScore;
+  }, [match.score]);
 
   const isLive = match.status === "live" || match.status === "halftime";
   const isFinished = match.status === "finished";
@@ -167,8 +184,9 @@ export function MatchCard({
                 <div className="flex items-center gap-3">
                   <span
                     className={cn(
-                      "font-bold text-3xl tabular-nums",
+                      "font-bold text-3xl tabular-nums transition-all duration-300",
                       isFinished ? "text-muted-foreground" : "text-foreground",
+                      isScoreChanged && "scale-125 text-orange-600",
                     )}
                   >
                     {match.score?.teamA ?? 0}
@@ -176,8 +194,9 @@ export function MatchCard({
                   <span className="text-muted-foreground text-xl">-</span>
                   <span
                     className={cn(
-                      "font-bold text-3xl tabular-nums",
+                      "font-bold text-3xl tabular-nums transition-all duration-300",
                       isFinished ? "text-muted-foreground" : "text-foreground",
+                      isScoreChanged && "scale-125 text-orange-600",
                     )}
                   >
                     {match.score?.teamB ?? 0}

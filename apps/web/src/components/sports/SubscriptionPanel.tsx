@@ -1,5 +1,5 @@
 import { Clock, GripVertical, Maximize2, Radio, Trash2, X } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -319,27 +319,45 @@ function DraggableMatchPanel({
               .sort((a, b) => b.eventSequence - a.eventSequence)
               .slice(0, 5)
               .map((event) => (
-                <div
-                  key={event.id}
-                  className={cn(
-                    "flex items-center gap-2 rounded p-1.5 text-xs",
-                    event.isHighlight ? "bg-orange-50" : "bg-white",
-                  )}
-                >
-                  {getEventIcon(event.eventType)}
-                  <span className="font-medium text-orange-600">
-                    {event.eventSequence}'
-                  </span>
-                  <span className="flex-1 truncate text-orange-800">
-                    {event.message.length > 40
-                      ? `${event.message.slice(0, 40)}...`
-                      : event.message}
-                  </span>
-                </div>
+                <MatchEventItem key={event.id} event={event} />
               ))}
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function MatchEventItem({ event }: { event: LiveEvent }) {
+  const [isNew, setIsNew] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsNew(false);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <div
+      className={cn(
+        "flex items-center gap-2 rounded p-1.5 text-xs transition-colors duration-500",
+        isNew
+          ? "bg-yellow-100 ring-1 ring-yellow-400"
+          : event.isHighlight
+            ? "bg-orange-50"
+            : "bg-white",
+      )}
+    >
+      {getEventIcon(event.eventType)}
+      <span className="font-medium text-orange-600">
+        {event.eventSequence}'
+      </span>
+      <span className="flex-1 truncate text-orange-800">
+        {event.message.length > 40
+          ? `${event.message.slice(0, 40)}...`
+          : event.message}
+      </span>
     </div>
   );
 }

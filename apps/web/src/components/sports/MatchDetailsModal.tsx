@@ -132,8 +132,6 @@ export function MatchDetailsModal({
     }
   };
 
-
-
   const getEventBackground = (eventType: EventType, isHighlight: boolean) => {
     if (isHighlight) {
       switch (eventType) {

@@ -6,7 +6,12 @@ import {
   Trophy,
 } from "lucide-react";
 import { useCallback, useState } from "react";
-import { useGetHomeDashboard } from "@/api/dashboard-api";
+import {
+  type DashboardResponse,
+  dashboardKey,
+  useGetHomeDashboard,
+} from "@/api/dashboard-api";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Footer,
   Header,
@@ -20,15 +25,102 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useWebSocket } from "@/hooks/use-websocket";
 import { cn } from "@/lib/utils";
 import { useSubscriptionsStore } from "@/stores/subscriptions-store";
-import type { Match } from "@/types/sports";
+import type { LiveEvent, Match } from "@/types/sports";
 import { MatchCardSkeleton } from "./match-card-skeleton";
-import { ClientWstEvent } from "@sporty/inter-types/ws";
+import {
+  ClientWstEvent,
+  ServerWsEvent,
+  type ServerWsMessage,
+} from "@sporty/inter-types/ws";
 import { toast } from "sonner";
+import { getEventIcon } from "./sports/event-utils";
 
 export function Home() {
+  const queryClient = useQueryClient();
+
   const { isConnected, sendMessage, close, status } = useWebSocket({
-    onMessage: (data) => {
-      console.log(data);
+    onMessage: (data: ServerWsMessage) => {
+      if (
+        data.event === ServerWsEvent.GOAL ||
+        data.event === ServerWsEvent.RED_CARD ||
+        data.event === ServerWsEvent.YELLOW_CARD ||
+        data.event === ServerWsEvent.PENALTY ||
+        data.event === ServerWsEvent.VAR_DECISION ||
+        data.event === ServerWsEvent.MATCH_END ||
+        data.event === ServerWsEvent.HALFTIME ||
+        data.event === ServerWsEvent.SCORE_UPDATE ||
+        data.data.isHighlight
+      ) {
+        // Find match details for better toast message
+        const match = matches.find((m) => m.id === data.data.matchId);
+        const teamNames =
+          match?.teamA && match?.teamB
+            ? `${match.teamA.shortCode} vs ${match.teamB.shortCode}`
+            : "Match Update";
+
+        toast(data.data.payload.message || "New likely event", {
+          description: teamNames,
+          icon: getEventIcon(data.event),
+        });
+
+        // Update Query Cache
+        queryClient.setQueryData<DashboardResponse>(
+          dashboardKey.home(),
+          (old) => {
+            if (!old) return old;
+
+            const payload = data.data.payload as any;
+            let newScore: string | undefined;
+            let displayMessage = payload.message;
+
+            // Handle object message structure (user specific)
+            if (
+              typeof payload.message === "object" &&
+              payload.message !== null
+            ) {
+              if (payload.message.score) newScore = payload.message.score;
+              if (payload.message.message)
+                displayMessage = payload.message.message;
+            } else if (payload.meta?.score) {
+              // Fallback to meta
+              newScore = payload.meta.score as string;
+            }
+
+            // Update Matches if score exists
+            const updatedMatches = old.matches.map((m) => {
+              if (m.id === data.data.matchId && newScore) {
+                const parts = newScore.split("-");
+                if (parts.length === 2) {
+                  const scoreA = Number.parseInt(parts[0], 10);
+                  const scoreB = Number.parseInt(parts[1], 10);
+                  if (!Number.isNaN(scoreA) && !Number.isNaN(scoreB)) {
+                    return {
+                      ...m,
+                      score: { teamA: scoreA, teamB: scoreB },
+                    };
+                  }
+                }
+              }
+              return m;
+            });
+
+            // Create clean event object
+            const cleanEvent: LiveEvent = {
+              ...(data.data.payload as LiveEvent),
+              message:
+                typeof displayMessage === "string"
+                  ? displayMessage
+                  : JSON.stringify(displayMessage),
+            };
+
+            return {
+              ...old,
+              matches: updatedMatches,
+              liveEvents: [cleanEvent, ...old.liveEvents].slice(0, 50),
+            };
+          },
+        );
+      }
     },
     reconnect: true,
     reconnectInterval: 5000,
@@ -51,16 +143,19 @@ export function Home() {
     setIsRefreshing(false);
   }, [refetch]);
 
-  const handleShowDetails = useCallback((match: Match) => {
-    sendMessage({
-      event: ClientWstEvent.SUBSCRIBE_MATCH,
-      data: {
-        matchId: match.id,
-      },
-    });
-    setSelectedMatch(match);
-    setIsDetailsModalOpen(true);
-  }, []);
+  const handleShowDetails = useCallback(
+    (match: Match) => {
+      sendMessage({
+        event: ClientWstEvent.SUBSCRIBE_MATCH,
+        data: {
+          matchId: match.id,
+        },
+      });
+      setSelectedMatch(match);
+      setIsDetailsModalOpen(true);
+    },
+    [sendMessage],
+  );
 
   const handleCloseDetailsModal = useCallback(() => {
     if (!selectedMatch) return;
@@ -72,7 +167,7 @@ export function Home() {
     });
     setIsDetailsModalOpen(false);
     setSelectedMatch(null);
-  }, []);
+  }, [selectedMatch, sendMessage]);
 
   const handleSubscribe = useCallback(
     (match: Match) => {
