@@ -22,6 +22,7 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useSubscriptionsStore } from "@/stores/subscriptions-store";
 import type { EventType, LiveEvent, Match } from "@/types/sports";
+import { getEventIcon } from "./event-utils";
 
 interface MatchDetailsModalProps {
   match: Match | null;
@@ -131,31 +132,7 @@ export function MatchDetailsModal({
     }
   };
 
-  const getEventIcon = (eventType: EventType) => {
-    const iconClass = "h-4 w-4";
-    switch (eventType) {
-      case "goal":
-        return <Goal className={cn(iconClass, "text-green-500")} />;
-      case "penalty":
-        return <Goal className={cn(iconClass, "text-blue-500")} />;
-      case "yellow_card":
-        return <AlertTriangle className={cn(iconClass, "text-yellow-500")} />;
-      case "red_card":
-        return <AlertTriangle className={cn(iconClass, "text-red-500")} />;
-      case "substitution":
-        return <ArrowLeftRight className={cn(iconClass, "text-blue-400")} />;
-      case "var_decision":
-        return <Video className={cn(iconClass, "text-purple-500")} />;
-      case "halftime":
-        return <Flag className={cn(iconClass, "text-orange-500")} />;
-      case "match_start":
-        return <Play className={cn(iconClass, "text-green-500")} />;
-      case "match_end":
-        return <Trophy className={cn(iconClass, "text-orange-500")} />;
-      default:
-        return <Radio className={cn(iconClass, "text-gray-400")} />;
-    }
-  };
+
 
   const getEventBackground = (eventType: EventType, isHighlight: boolean) => {
     if (isHighlight) {

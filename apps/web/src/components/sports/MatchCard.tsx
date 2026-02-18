@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { Match } from "@/types/sports";
-import type { ClientWsMessage } from "@sporty/inter-types/ws";
 
 interface MatchCardProps {
   match: Match;
@@ -111,12 +110,12 @@ export function MatchCard({
       onClick={() => onShowDetails?.(match)}
     >
       {/* Paper fold effect */}
-      <div className="absolute top-0 right-0 h-8 w-8 bg-gradient-to-bl from-muted to-transparent" />
-      <div className="absolute top-0 right-0 h-0 w-0 border-t-[32px] border-t-border border-l-[32px] border-l-transparent" />
+      <div className="absolute top-0 right-0 h-8 w-8 bg-linear-to-bl from-muted to-transparent" />
+      <div className="absolute top-0 right-0 h-0 w-0 border-t-32 border-t-border border-l-32 border-l-transparent" />
 
       <CardContent className="p-0">
         {/* Header: League & Status */}
-        <div className="flex items-center justify-between border-border border-b bg-gradient-to-r from-background to-muted px-4 py-3">
+        <div className="flex items-center justify-between border-border border-b bg-linear-to-r from-background to-muted px-4 py-3">
           <div className="flex items-center gap-2">
             {league && (
               <>
@@ -206,7 +205,7 @@ export function MatchCard({
                   onShowLiveFeed(match);
                 }}
                 className={cn(
-                  "flex-1 bg-gradient-to-r from-destructive to-red-600",
+                  "flex-1 bg-linear-to-r from-destructive to-red-600",
                   "hover:from-red-600 hover:to-red-700",
                   "text-white shadow-md hover:shadow-lg",
                   "transition-all duration-200",
@@ -285,7 +284,7 @@ function TeamDisplay({
 }) {
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-border bg-gradient-to-br from-background to-muted shadow-sm">
+      <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-border bg-linear-to-br from-background to-muted shadow-sm">
         {logoUrl ? (
           <img
             src={logoUrl}

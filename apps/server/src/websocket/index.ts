@@ -2,6 +2,7 @@ import type { Server } from "node:http";
 import { WebSocketServer } from "ws";
 import { handler } from "./handlers";
 import { broadcast, sendToMatch } from "./helper";
+import type { ServerWsMessage } from "@sporty/inter-types/ws";
 
 export const createWsServer = (server: Server) => {
   const wss = new WebSocketServer({
@@ -11,8 +12,6 @@ export const createWsServer = (server: Server) => {
 
   wss.on("connection", (socket, req) => {
     // connect to the server
-
-    socket.send("Server connected");
 
     setInterval(() => {
       wss.clients.forEach((ws) => {
@@ -30,10 +29,10 @@ export const createWsServer = (server: Server) => {
   console.log("WebSocket initialized");
 
   return {
-    sendToMatch: (matchId: string, payload: any) => {
+    sendToMatch: (matchId: string, payload: ServerWsMessage) => {
       sendToMatch(matchId, payload);
     },
-    broadcast: (payload: any) => {
+    broadcast: (payload: ServerWsMessage) => {
       broadcast(wss.clients, payload);
     },
   };

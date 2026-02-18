@@ -4,6 +4,7 @@ import { liveEvents } from "@sporty/db/schema";
 import { wsHelper } from "@/index";
 import { ApiError } from "@/utils/Api-response";
 import { sendToMatch } from "@/websocket/helper";
+import { ServerWsEvent } from "@sporty/inter-types/ws";
 
 export type LiveEvent = InferSelectModel<typeof liveEvents>;
 export type LiveEventCreate = InferInsertModel<typeof liveEvents>;
@@ -16,9 +17,17 @@ const notFound = (id: string) =>
 
 export const listLiveEvents = async (): Promise<LiveEvent[]> => {
   wsHelper.broadcast({
-    event: "live-event-list",
-    data: { random: Math.random() },
+    event: ServerWsEvent.CONNECTION_ESTABLISHED,
+    data: {
+      matchId: "system",
+
+      isHighlight: false,
+      payload: {
+        random: Math.random(),
+      },
+    },
   });
+
   return db.select().from(liveEvents).where(isNull(liveEvents.deletedAt));
 };
 
@@ -42,8 +51,12 @@ export const createLiveEvent = async (
   }
 
   sendToMatch(event.matchId, {
-    event: "live-event-create",
-    data: event,
+    event: event.eventType as ServerWsEvent,
+    data: {
+      matchId: event.matchId,
+      payload: event,
+      isHighlight: event.isHighlight ?? false,
+    },
   });
 
   return event;
@@ -63,8 +76,12 @@ export const updateLiveEvent = async (
   }
 
   sendToMatch(event.matchId, {
-    event: "live-event-update",
-    data: event,
+    event: ServerWsEvent.MATCH_UPDATE,
+    data: {
+      matchId: event.matchId,
+      payload: event,
+      isHighlight: event.isHighlight ?? false,
+    },
   });
 
   return event;
@@ -81,8 +98,13 @@ export const deleteLiveEvent = async (id: string): Promise<LiveEvent> => {
   }
 
   sendToMatch(event.matchId, {
-    event: "live-event-delete",
-    data: { id },
+    event: ServerWsEvent.MATCH_UPDATE,
+
+    data: {
+      matchId: event.matchId,
+      isHighlight: event.isHighlight ?? false,
+      payload: { id, deleted: true },
+    },
   });
 
   return event;

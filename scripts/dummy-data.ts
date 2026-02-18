@@ -92,25 +92,31 @@ const createLiveEvent = (
   });
 
 const EVENTS = [
-  "goal",
-  "card",
-  "substitution",
-  "injury",
-  "corner",
-  "penalty",
-  "yellow card",
-  "red card",
+  "GOAL",
+  "RED_CARD",
+  "YELLOW_CARD",
+  "PENALTY",
+  "SUBSTITUTION",
+  "VAR_DECISION",
+  "MATCH_START",
+  "MATCH_END",
+  "HALFTIME",
+  "SECOND_HALF_START",
+  "OWN_GOAL",
 ] as const;
 
 const EVENT_MESSAGES: Record<string, string> = {
-  goal: "Goal Scored",
-  card: "Card Issued",
-  substitution: "Substitution Made",
-  injury: "Injury Occurred",
-  corner: "Corner Kick",
-  penalty: "Penalty Awarded",
-  "yellow card": "Yellow Card Issued",
-  "red card": "Red Card Issued",
+  GOAL: "Goal Scored",
+  RED_CARD: "Red Card Issued",
+  YELLOW_CARD: "Yellow Card Issued",
+  PENALTY: "Penalty Awarded",
+  SUBSTITUTION: "Substitution Made",
+  VAR_DECISION: "VAR Decision",
+  MATCH_START: "Match Started",
+  MATCH_END: "Match Ended",
+  HALFTIME: "Halftime",
+  SECOND_HALF_START: "Second Half Started",
+  OWN_GOAL: "Own Goal",
 };
 
 const SCORE_META = Array.from({ length: 10 }, (_, i) => ({

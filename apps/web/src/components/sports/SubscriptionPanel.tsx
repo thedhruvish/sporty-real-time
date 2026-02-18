@@ -1,31 +1,20 @@
-import {
-  AlertTriangle,
-  ArrowLeftRight,
-  Clock,
-  Flag,
-  Goal,
-  GripVertical,
-  Maximize2,
-  Play,
-  Radio,
-  Trash2,
-  Trophy,
-  Video,
-  X,
-} from "lucide-react";
+import { Clock, GripVertical, Maximize2, Radio, Trash2, X } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { useSubscriptionsStore } from "@/stores/subscriptions-store";
-import type { EventType, LiveEvent, Match } from "@/types/sports";
+import type { LiveEvent, Match } from "@/types/sports";
+import { ClientWstEvent, type ClientWsMessage } from "@sporty/inter-types/ws";
+import { getEventIcon } from "./event-utils";
 
 interface SubscriptionPanelProps {
   isOpen: boolean;
   onClose: () => void;
   liveEvents: LiveEvent[];
   onShowMatchDetails?: (match: Match) => void;
+  sendMessage: (message: ClientWsMessage) => void;
 }
 
 export function SubscriptionPanel({
@@ -33,6 +22,7 @@ export function SubscriptionPanel({
   onClose,
   liveEvents,
   onShowMatchDetails,
+  sendMessage,
 }: SubscriptionPanelProps) {
   const { subscribedMatches, unsubscribe, reorderMatches } =
     useSubscriptionsStore();
@@ -83,23 +73,20 @@ export function SubscriptionPanel({
   return (
     <div
       className={cn(
-        "fixed top-0 right-0 h-full w-80 md:w-96",
+        "fixed top-16 right-0 h-[calc(100vh-4rem)] w-80 md:w-96",
         "0 border-l  backdrop-blur-sm",
         "z-40 flex flex-col shadow-2xl",
-        "transform transition-transform duration-300",
+        "transform transition-transform duration-300 ",
         "paper-texture",
       )}
     >
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-gradient-to-r  shadow-md">
-        <div className="flex items-center justify-between">
+      <div className="sticky top-0 z-10 p-3  shadow-md">
+        <div className=" flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Radio className="h-5 w-5" />
             <span className="font-semibold">Watching</span>
-            <Badge
-              variant="secondary"
-              className="border-white/30 bg-white/20 "
-            >
+            <Badge variant="secondary" className="border-white/30 bg-white/20 ">
               {subscribedMatches.length}
             </Badge>
           </div>
@@ -112,13 +99,11 @@ export function SubscriptionPanel({
             <X className="h-5 w-5" />
           </Button>
         </div>
-        <p className="mt-1 /70 text-xs">
-          Drag to reorder • Click to expand
-        </p>
+        <p className="mt-1 /70 text-xs">Drag to reorder • Click to expand</p>
       </div>
 
       {/* Match List */}
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-1 min-h-0">
         <div className="space-y-3 p-3">
           {subscribedMatches.length === 0 ? (
             <div className="py-12 text-center">
@@ -149,7 +134,15 @@ export function SubscriptionPanel({
                   onDragLeave={handleDragLeave}
                   onDrop={(e) => handleDrop(e, index)}
                   onDragEnd={handleDragEnd}
-                  onUnsubscribe={() => unsubscribe(subscription.match.id)}
+                  onUnsubscribe={() => {
+                    unsubscribe(subscription.match.id);
+                    sendMessage({
+                      event: ClientWstEvent.UNSUBSCRIBE_MATCH,
+                      data: {
+                        matchId: subscription.match.id,
+                      },
+                    });
+                  }}
                   onShowDetails={() => onShowMatchDetails?.(subscription.match)}
                 />
               );
@@ -207,31 +200,7 @@ function DraggableMatchPanel({
   const teamB = match.teamB;
   const isLive = match.status === "live" || match.status === "halftime";
 
-  const getEventIcon = (eventType: EventType) => {
-    const iconClass = "h-3 w-3";
-    switch (eventType) {
-      case "goal":
-        return <Goal className={cn(iconClass, "text-green-500")} />;
-      case "penalty":
-        return <Goal className={cn(iconClass, "text-blue-500")} />;
-      case "yellow_card":
-        return <AlertTriangle className={cn(iconClass, "text-yellow-500")} />;
-      case "red_card":
-        return <AlertTriangle className={cn(iconClass, "text-red-500")} />;
-      case "substitution":
-        return <ArrowLeftRight className={cn(iconClass, "text-blue-400")} />;
-      case "var_decision":
-        return <Video className={cn(iconClass, "text-purple-500")} />;
-      case "halftime":
-        return <Flag className={cn(iconClass, "text-orange-500")} />;
-      case "match_start":
-        return <Play className={cn(iconClass, "text-green-500")} />;
-      case "match_end":
-        return <Trophy className={cn(iconClass, "text-orange-500")} />;
-      default:
-        return <Radio className={cn(iconClass, "text-gray-400")} />;
-    }
-  };
+  /* getEventIcon removed, using imported version */
 
   return (
     <div
@@ -255,7 +224,7 @@ function DraggableMatchPanel({
           "flex items-center gap-2 px-3 py-2",
           isLive
             ? "bg-linear-to-r from-red-500 to-red-600 "
-            : "bg-gradient-to-r from-orange-100 to-orange-50 text-orange-800",
+            : "bg-linear-to-r from-orange-100 to-orange-50 text-orange-800",
         )}
       >
         <GripVertical className="h-4 w-4 cursor-grab opacity-60 active:cursor-grabbing" />

@@ -1,21 +1,11 @@
-import {
-  AlertTriangle,
-  ArrowLeftRight,
-  Clock,
-  Flag,
-  Goal,
-  Play,
-  Radio,
-  Trophy,
-  Video,
-  X,
-} from "lucide-react";
+import { Clock, Radio, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import type { EventType, LiveEvent, Match } from "@/types/sports";
+import { getEventIcon } from "./event-utils";
 
 interface LiveFeedModalProps {
   match: Match | null;
@@ -54,32 +44,6 @@ export function LiveFeedModal({
   const teamA = match.teamA;
   const teamB = match.teamB;
   const league = match.league;
-
-  const getEventIcon = (eventType: EventType) => {
-    const iconClass = "h-4 w-4";
-    switch (eventType) {
-      case "goal":
-        return <Goal className={cn(iconClass, "text-green-500")} />;
-      case "penalty":
-        return <Goal className={cn(iconClass, "text-blue-500")} />;
-      case "yellow_card":
-        return <AlertTriangle className={cn(iconClass, "text-yellow-500")} />;
-      case "red_card":
-        return <AlertTriangle className={cn(iconClass, "text-destructive")} />;
-      case "substitution":
-        return <ArrowLeftRight className={cn(iconClass, "text-blue-400")} />;
-      case "var_decision":
-        return <Video className={cn(iconClass, "text-purple-500")} />;
-      case "halftime":
-        return <Flag className={cn(iconClass, "text-primary")} />;
-      case "match_start":
-        return <Play className={cn(iconClass, "text-green-500")} />;
-      case "match_end":
-        return <Trophy className={cn(iconClass, "text-primary")} />;
-      default:
-        return <Radio className={cn(iconClass, "text-muted-foreground")} />;
-    }
-  };
 
   const getEventBackground = (eventType: EventType, isHighlight: boolean) => {
     if (isHighlight) {
@@ -127,10 +91,10 @@ export function LiveFeedModal({
         )}
       >
         {/* Paper fold effect */}
-        <div className="absolute top-0 right-0 hidden h-0 w-0 border-t-24 border-t-border border-l-[24px] border-l-transparent sm:block" />
+        <div className="absolute top-0 right-0 hidden h-0 w-0 border-t-24 border-t-border border-l-24 border-l-transparent sm:block" />
 
         {/* Header */}
-        <div className="sticky top-0 z-10 bg-gradient-to-r from-destructive to-red-600 p-4 text-white sm:rounded-t-xl">
+        <div className="sticky top-0 z-10 bg-linear-to-r from-destructive to-red-600 p-4 text-white sm:rounded-t-xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1.5">

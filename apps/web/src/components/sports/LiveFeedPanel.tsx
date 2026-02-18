@@ -1,23 +1,11 @@
-import {
-  AlertTriangle,
-  ArrowLeftRight,
-  Clock,
-  Flag,
-  Goal,
-  GripVertical,
-  Maximize2,
-  Play,
-  Radio,
-  Trophy,
-  Video,
-  X,
-} from "lucide-react";
+import { Clock, GripVertical, Maximize2, Radio, X } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import type { EventType, LiveEvent, Match } from "@/types/sports";
+import type { LiveEvent, Match } from "@/types/sports";
+import { getEventIcon } from "./event-utils";
 
 interface LiveFeedPanelProps {
   match: Match;
@@ -43,32 +31,6 @@ export function LiveFeedPanel({
   const teamA = match.teamA;
   const teamB = match.teamB;
   const league = match.league;
-
-  const getEventIcon = (eventType: EventType) => {
-    const iconClass = "h-3 w-3";
-    switch (eventType) {
-      case "goal":
-        return <Goal className={cn(iconClass, "text-green-500")} />;
-      case "penalty":
-        return <Goal className={cn(iconClass, "text-blue-500")} />;
-      case "yellow_card":
-        return <AlertTriangle className={cn(iconClass, "text-yellow-500")} />;
-      case "red_card":
-        return <AlertTriangle className={cn(iconClass, "text-destructive")} />;
-      case "substitution":
-        return <ArrowLeftRight className={cn(iconClass, "text-blue-400")} />;
-      case "var_decision":
-        return <Video className={cn(iconClass, "text-purple-500")} />;
-      case "halftime":
-        return <Flag className={cn(iconClass, "text-primary")} />;
-      case "match_start":
-        return <Play className={cn(iconClass, "text-green-500")} />;
-      case "match_end":
-        return <Trophy className={cn(iconClass, "text-primary")} />;
-      default:
-        return <Radio className={cn(iconClass, "text-muted-foreground")} />;
-    }
-  };
 
   const isLive = match.status === "live" || match.status === "halftime";
 
@@ -165,7 +127,7 @@ export function LiveFeedPanel({
               <span className="max-w-[80px] truncate text-right text-muted-foreground text-xs">
                 {teamA?.name}
               </span>
-              <div className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-gradient-to-br from-background to-secondary">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-linear-to-br from-background to-secondary">
                 <span className="font-bold text-primary text-xs">
                   {teamA?.shortCode?.slice(0, 2)}
                 </span>
@@ -183,7 +145,7 @@ export function LiveFeedPanel({
             </div>
 
             <div className="flex flex-1 items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-gradient-to-br from-background to-secondary">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-linear-to-br from-background to-secondary">
                 <span className="font-bold text-primary text-xs">
                   {teamB?.shortCode?.slice(0, 2)}
                 </span>

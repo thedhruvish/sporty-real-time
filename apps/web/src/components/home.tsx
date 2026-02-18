@@ -23,6 +23,7 @@ import { useSubscriptionsStore } from "@/stores/subscriptions-store";
 import type { Match } from "@/types/sports";
 import { MatchCardSkeleton } from "./match-card-skeleton";
 import { ClientWstEvent } from "@sporty/inter-types/ws";
+import { toast } from "sonner";
 
 export function Home() {
   const { isConnected, sendMessage, close, status } = useWebSocket({
@@ -51,17 +52,36 @@ export function Home() {
   }, [refetch]);
 
   const handleShowDetails = useCallback((match: Match) => {
+    sendMessage({
+      event: ClientWstEvent.SUBSCRIBE_MATCH,
+      data: {
+        matchId: match.id,
+      },
+    });
     setSelectedMatch(match);
     setIsDetailsModalOpen(true);
   }, []);
 
   const handleCloseDetailsModal = useCallback(() => {
+    if (!selectedMatch) return;
+    sendMessage({
+      event: ClientWstEvent.UNSUBSCRIBE_MATCH,
+      data: {
+        matchId: selectedMatch?.id || "",
+      },
+    });
     setIsDetailsModalOpen(false);
     setSelectedMatch(null);
   }, []);
 
   const handleSubscribe = useCallback(
     (match: Match) => {
+      const { subscribedMatches } = useSubscriptionsStore.getState();
+
+      if (subscribedMatches.length >= 3) {
+        toast.error("Only three subscrible are the allowed ...");
+        return;
+      }
       const matchEvents = liveEvents.filter((e) => e.matchId === match.id);
       subscribe(match, matchEvents);
       sendMessage({
@@ -71,7 +91,7 @@ export function Home() {
         },
       });
     },
-    [liveEvents, subscribe],
+    [liveEvents, subscribe, sendMessage],
   );
 
   const handleUnsubscribe = useCallback(
@@ -308,6 +328,7 @@ export function Home() {
         onClose={() => setIsPanelOpen(false)}
         liveEvents={liveEvents}
         onShowMatchDetails={handleShowDetails}
+        sendMessage={sendMessage}
       />
 
       {/* Match Details Modal */}

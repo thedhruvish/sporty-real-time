@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { type ClientWsMessage } from "@sporty/inter-types/ws";
+import {
+  type ClientWsMessage,
+  type ServerWsMessage,
+} from "@sporty/inter-types/ws";
 const ENDPOINT = "ws://localhost:3000/ws";
 
 type WebSocketStatus = "CONNECTING" | "OPEN" | "CLOSED" | "ERROR";
@@ -28,13 +31,13 @@ export const useWebSocket = ({
 
     setStatus("OPEN");
     socket.addEventListener("message", (event) => {
-      console.log(event);
-      let data;
+      let data: ServerWsMessage;
       try {
         data = JSON.parse(event.data);
       } catch (error) {
-        data = event.data;
+        data = event.data as ServerWsMessage;
       }
+      
       onMessage?.(data);
     });
 
