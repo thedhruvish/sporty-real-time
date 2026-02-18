@@ -63,10 +63,37 @@ export const loginUser = async (
   password: string,
 ): Promise<AuthResult> => {
   const [user] = await db.select().from(users).where(eq(users.email, email));
+
   if (!user || !(await verifyPassword(password, user.password))) {
     throw new ApiError(401, "Invalid credentials");
   }
 
   const token = signToken(user);
   return { user: sanitizeUser(user), token };
+};
+
+export const getUser = async (id: string) => {
+  const [user] = await db.select().from(users).where(eq(users.id, id));
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+  return sanitizeUser(user);
+};
+
+export const generateSocketToken = (user: { id: string; email: string }) => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new ApiError(500, "JWT secret not configured");
+  }
+  return jwt.sign(user, secret, {
+    expiresIn: "1d",
+  });
+};
+
+export const verifySocketToken = (token: string) => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new ApiError(500, "JWT secret not configured");
+  }
+  return jwt.verify(token, secret);
 };

@@ -152,6 +152,7 @@ export function Home({
     reconnect: true,
     reconnectInterval: 5000,
   });
+
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);

@@ -8,3 +8,10 @@ export const loginSchema = z.object({
 export const registerSchema = loginSchema.extend({
   name: z.string().min(2).max(100).optional(),
 });
+
+export const jwtTokenSchema = z.object({
+  user: z.object({
+    id: z.string(),
+    email: z.email(),
+  }),
+});

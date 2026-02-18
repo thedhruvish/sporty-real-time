@@ -21,6 +21,9 @@ export const authKey = {
   all: ["auth"],
   login: () => [...authKey.all, "login"],
   register: () => [...authKey.all, "register"],
+  tokenCreateForWebToken: ["tokenCreateForWebToken"],
+  me: ["me"],
+  webSocketToken: ["token"],
 };
 
 const authApi = {
@@ -30,6 +33,16 @@ const authApi = {
 
   register: (data: RegisterRequest) => {
     return axiosClient.post<AuthResponse>("/auth/register", data);
+  },
+
+  tokenCreateForWebToken: () => {
+    return axiosClient.get<AuthResponse>("/auth/token");
+  },
+  me: () => {
+    return axiosClient.get<AuthResponse>("/auth/me");
+  },
+  webSocketToken: () => {
+    return axiosClient.get<AuthResponse>("/auth/token");
   },
 };
 
@@ -44,5 +57,26 @@ export const useRegister = () => {
   return useMutation({
     mutationKey: authKey.register(),
     mutationFn: authApi.register,
+  });
+};
+
+export const useTokenCreateForWebToken = () => {
+  return useMutation({
+    mutationKey: authKey.tokenCreateForWebToken,
+    mutationFn: authApi.tokenCreateForWebToken,
+  });
+};
+
+export const useMe = () => {
+  return useMutation({
+    mutationKey: authKey.me,
+    mutationFn: authApi.me,
+  });
+};
+
+export const useWebSocketToken = () => {
+  return useMutation({
+    mutationKey: authKey.webSocketToken,
+    mutationFn: authApi.webSocketToken,
   });
 };

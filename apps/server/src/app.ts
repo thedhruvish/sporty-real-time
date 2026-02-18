@@ -17,6 +17,7 @@ app.use(
   cors({
     origin: env.CORS_ORIGIN,
     methods: ["GET", "POST", "OPTIONS"],
+    credentials: true,
   }),
 );
 

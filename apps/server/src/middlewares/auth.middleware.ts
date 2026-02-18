@@ -2,15 +2,8 @@ import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { ApiError } from "@/utils/Api-response";
 
-type JwtPayload = {
-  sub: string;
-  email: string;
-};
-
-export type AuthRequest = Request & { user?: JwtPayload };
-
 export const requireAuth = (
-  req: AuthRequest,
+  req: Request,
   _res: Response,
   next: NextFunction,
 ) => {
@@ -26,7 +19,7 @@ export const requireAuth = (
   }
 
   try {
-    const payload = jwt.verify(token, secret) as JwtPayload;
+    const payload = jwt.verify(token, secret) as { id: string; email: string };
     req.user = payload;
     return next();
   } catch {

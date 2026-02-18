@@ -29,6 +29,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: `${BACKEND_URL}/api`,
+  withCredentials: true,
   timeout: 15000,
   headers: {
     "Content-Type": "application/json",
