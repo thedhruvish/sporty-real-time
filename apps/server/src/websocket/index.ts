@@ -1,8 +1,8 @@
 import type { Server } from "node:http";
+import type { ServerWsMessage } from "@sporty/inter-types/ws";
 import { WebSocketServer } from "ws";
 import { handler } from "./handlers";
 import { broadcast, sendToMatch } from "./helper";
-import type { ServerWsMessage } from "@sporty/inter-types/ws";
 
 export const createWsServer = (server: Server) => {
   const wss = new WebSocketServer({

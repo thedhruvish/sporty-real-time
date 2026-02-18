@@ -1,3 +1,4 @@
+import { type ClientWsMessage, ClientWstEvent } from "@sporty/inter-types/ws";
 import { Clock, GripVertical, Maximize2, Radio, Trash2, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -6,7 +7,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { useSubscriptionsStore } from "@/stores/subscriptions-store";
 import type { LiveEvent, Match } from "@/types/sports";
-import { ClientWstEvent, type ClientWsMessage } from "@sporty/inter-types/ws";
 import { getEventIcon } from "./event-utils";
 
 interface SubscriptionPanelProps {
@@ -74,36 +74,36 @@ export function SubscriptionPanel({
     <div
       className={cn(
         "fixed top-16 right-0 h-[calc(100vh-4rem)] w-80 md:w-96",
-        "0 border-l  backdrop-blur-sm",
+        "0 border-l backdrop-blur-sm",
         "z-40 flex flex-col shadow-2xl",
-        "transform transition-transform duration-300 ",
+        "transform transition-transform duration-300",
         "paper-texture",
       )}
     >
       {/* Header */}
-      <div className="sticky top-0 z-10 p-3  shadow-md">
-        <div className=" flex items-center justify-between">
+      <div className="sticky top-0 z-10 p-3 shadow-md">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Radio className="h-5 w-5" />
             <span className="font-semibold">Watching</span>
-            <Badge variant="secondary" className="border-white/30 bg-white/20 ">
+            <Badge variant="secondary" className="border-white/30 bg-white/20">
               {subscribedMatches.length}
             </Badge>
           </div>
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8  hover:bg-white/20"
+            className="h-8 w-8 hover:bg-white/20"
             onClick={onClose}
           >
             <X className="h-5 w-5" />
           </Button>
         </div>
-        <p className="mt-1 /70 text-xs">Drag to reorder • Click to expand</p>
+        <p className="/70 mt-1 text-xs">Drag to reorder • Click to expand</p>
       </div>
 
       {/* Match List */}
-      <ScrollArea className="flex-1 min-h-0">
+      <ScrollArea className="min-h-0 flex-1">
         <div className="space-y-3 p-3">
           {subscribedMatches.length === 0 ? (
             <div className="py-12 text-center">
@@ -223,7 +223,7 @@ function DraggableMatchPanel({
         className={cn(
           "flex items-center gap-2 px-3 py-2",
           isLive
-            ? "bg-linear-to-r from-red-500 to-red-600 "
+            ? "bg-linear-to-r from-red-500 to-red-600"
             : "bg-linear-to-r from-orange-100 to-orange-50 text-orange-800",
         )}
       >
@@ -249,7 +249,7 @@ function DraggableMatchPanel({
               className={cn(
                 "h-6 w-6",
                 isLive
-                  ? " hover:bg-white/20"
+                  ? "hover:bg-white/20"
                   : "text-orange-600 hover:bg-orange-100",
               )}
               onClick={onShowDetails}
@@ -262,7 +262,7 @@ function DraggableMatchPanel({
               className={cn(
                 "h-6 w-6",
                 isLive
-                  ? " hover:bg-white/20"
+                  ? "hover:bg-white/20"
                   : "text-orange-600 hover:bg-orange-100",
               )}
               onClick={onUnsubscribe}

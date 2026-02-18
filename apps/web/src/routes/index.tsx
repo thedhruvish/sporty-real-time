@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Home } from "@/components/home";
 import { z } from "zod";
+import { Home } from "@/components/home";
 
 export const Route = createFileRoute("/")({
   component: HomeComponent,
@@ -10,7 +10,7 @@ export const Route = createFileRoute("/")({
 });
 
 function HomeComponent() {
-  const {panelOpen} = Route.useSearch();
+  const { panelOpen } = Route.useSearch();
   const navigate = Route.useNavigate();
   const togglePenel = () => {
     navigate({

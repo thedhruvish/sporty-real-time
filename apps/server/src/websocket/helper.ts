@@ -1,6 +1,6 @@
+import type { ServerWsMessage } from "@sporty/inter-types/ws";
 import WebSocket from "ws";
 import { clients } from "./handlers";
-import type { ServerWsMessage } from "@sporty/inter-types/ws";
 
 export const sendToMatch = (matchId: string, payload: ServerWsMessage) => {
   const matchClients = clients.get(matchId);

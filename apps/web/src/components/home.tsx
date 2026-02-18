@@ -1,4 +1,10 @@
 import {
+  ClientWstEvent,
+  ServerWsEvent,
+  type ServerWsMessage,
+} from "@sporty/inter-types/ws";
+import { useQueryClient } from "@tanstack/react-query";
+import {
   Calendar,
   CheckCircle,
   PanelRightOpen,
@@ -6,12 +12,12 @@ import {
   Trophy,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 import {
   type DashboardResponse,
   dashboardKey,
   useGetHomeDashboard,
 } from "@/api/dashboard-api";
-import { useQueryClient } from "@tanstack/react-query";
 import {
   Footer,
   Header,
@@ -27,12 +33,6 @@ import { cn } from "@/lib/utils";
 import { useSubscriptionsStore } from "@/stores/subscriptions-store";
 import type { LiveEvent, Match } from "@/types/sports";
 import { MatchCardSkeleton } from "./match-card-skeleton";
-import {
-  ClientWstEvent,
-  ServerWsEvent,
-  type ServerWsMessage,
-} from "@sporty/inter-types/ws";
-import { toast } from "sonner";
 import { getEventIcon } from "./sports/event-utils";
 
 export function Home({
@@ -44,7 +44,7 @@ export function Home({
 }) {
   const queryClient = useQueryClient();
 
-  const { isConnected, sendMessage, close, status } = useWebSocket({
+  const { sendMessage, status } = useWebSocket({
     onMessage: (data: ServerWsMessage) => {
       if (
         data.event === ServerWsEvent.GOAL ||
@@ -75,7 +75,7 @@ export function Home({
           (old) => {
             if (!old) return old;
 
-            const payload = data.data.payload as any;
+            const payload = data.data.payload;
             let newScore: string | undefined;
             let displayMessage = payload.message;
 
@@ -158,7 +158,7 @@ export function Home({
 
   const { subscribe, unsubscribe, isSubscribed } = useSubscriptionsStore();
 
-  const { data, isLoading, isError, error, refetch } = useGetHomeDashboard();
+  const { data, isLoading, refetch } = useGetHomeDashboard();
 
   const matches = data?.matches || [];
   const liveEvents = data?.liveEvents || [];

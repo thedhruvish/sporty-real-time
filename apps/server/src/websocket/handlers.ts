@@ -1,5 +1,5 @@
+import type { IncomingMessage } from "node:http";
 import { type ClientWsMessage, ClientWstEvent } from "@sporty/inter-types/ws";
-import type { IncomingMessage } from "http";
 import type { WebSocket } from "ws";
 
 export const clients = new Map<string, Set<WebSocket>>();
@@ -9,7 +9,7 @@ export const handler = (ws: WebSocket, _req: IncomingMessage) => {
     let msg: ClientWsMessage;
     try {
       msg = JSON.parse(raw.toString()) as ClientWsMessage;
-    } catch (error) {
+    } catch {
       return;
     }
 

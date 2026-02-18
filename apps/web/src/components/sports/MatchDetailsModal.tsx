@@ -1,19 +1,4 @@
-import {
-  AlertTriangle,
-  ArrowLeftRight,
-  Award,
-  Calendar,
-  Clock,
-  Flag,
-  Goal,
-  MapPin,
-  Play,
-  Radio,
-  Trophy,
-  Users,
-  Video,
-  X,
-} from "lucide-react";
+import { Award, Calendar, Clock, MapPin, Radio, Users, X } from "lucide-react";
 import { useCallback, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

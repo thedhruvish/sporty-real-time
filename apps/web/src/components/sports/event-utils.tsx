@@ -1,3 +1,4 @@
+import type { ServerWsEvent } from "@sporty/inter-types/ws";
 import {
   AlertTriangle,
   ArrowLeftRight,
@@ -9,7 +10,6 @@ import {
   Video,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { ServerWsEvent } from "@sporty/inter-types/ws";
 import type { EventType } from "@/types/sports";
 
 export const getEventIcon = (eventType: EventType | ServerWsEvent) => {
