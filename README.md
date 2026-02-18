@@ -1,6 +1,4 @@
-# sporty
-
-This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines React, TanStack Router, Express, and more.
+# sporty - Real-time sports updates
 
 ## Features
 
@@ -11,9 +9,9 @@ This project was created with [Better-T-Stack](https://github.com/AmanVarshney01
 - **Express** - Fast, unopinionated web framework
 - **Node.js** - Runtime environment
 - **Drizzle** - TypeScript-first ORM
-- **PostgreSQL** - Database engine
-- **Turborepo** - Optimized monorepo build system
+- **PostgreSQL** - Database engine (neon db)
 - **Biome** - Linting and formatting
+- **ws** - WebSocket To send a live events
 
 ## Getting Started
 
