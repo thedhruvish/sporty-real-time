@@ -81,7 +81,6 @@ export const getUser = async (id: string) => {
 };
 
 export const generateSocketToken = (user: { sub: string; email: string }) => {
-  console.log("run this is the here");
   const secret = process.env.JWT_SECRET;
   if (!secret) {
     throw new ApiError(500, "JWT secret not configured");

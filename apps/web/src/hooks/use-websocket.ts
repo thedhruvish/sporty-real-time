@@ -11,12 +11,14 @@ interface UseWebSocketOptions {
   reconnect?: boolean;
   reconnectInterval?: number;
   onMessage?: (data: ServerWsMessage) => void;
+  wsToken?: string;
 }
 
 export const useWebSocket = ({
   reconnect = true,
   reconnectInterval = 5000,
   onMessage,
+  wsToken,
 }: UseWebSocketOptions) => {
   const socketRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -28,12 +30,11 @@ export const useWebSocket = ({
       return;
     }
 
-    const { token } = await authApi.webSocketToken();
     const url = new URL(ENDPOINT);
-    if (token) {
-      url.searchParams.append("token", token);
+    if (wsToken) {
+      url.searchParams.append("token", wsToken);
     }
-    console.log(url.toString());
+
     const socket = new WebSocket(url.toString());
     socketRef.current = socket;
 
@@ -68,7 +69,7 @@ export const useWebSocket = ({
       setStatus("ERROR");
       console.log(error);
     });
-  }, [reconnect, reconnectInterval, onMessage]);
+  }, [reconnect, reconnectInterval, onMessage, wsToken]);
 
   const sendMessage = useCallback((message: ClientWsMessage) => {
     if (socketRef.current?.readyState === WebSocket.OPEN) {
@@ -88,7 +89,7 @@ export const useWebSocket = ({
     return () => {
       close();
     };
-  }, []);
+  }, [wsToken]);
   return {
     status,
     sendMessage,

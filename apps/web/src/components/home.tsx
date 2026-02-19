@@ -46,12 +46,12 @@ export function Home({
   togglePanel: () => void;
 }) {
   const queryClient = useQueryClient();
-  const { isAuthenticated, token: authToken, logout, user } = useAuthStore();
+  const { isAuthenticated, logout, user } = useAuthStore();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   // Fetch WebSocket token if authenticated
   const { mutateAsync: getWsToken } = useWebSocketToken();
-  const [wsToken, setWsToken] = useState<string | null>(null);
+  const [wsToken, setWsToken] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -60,11 +60,10 @@ export function Home({
           if (res.token) setWsToken(res.token);
         })
         .catch(() => {
-          // If token fetch fails, maybe logout or handle error
           console.error("Failed to fetch WS token");
         });
     } else {
-      setWsToken(null);
+      setWsToken(undefined);
     }
   }, [isAuthenticated, getWsToken]);
 
@@ -79,7 +78,7 @@ export function Home({
         data.event === ServerWsEvent.MATCH_END ||
         data.event === ServerWsEvent.HALFTIME ||
         data.event === ServerWsEvent.SCORE_UPDATE ||
-        data.data.isHighlight
+        data?.data?.isHighlight
       ) {
         // Find match details for better toast message
         const match = matches.find((m) => m.id === data.data.matchId);
@@ -175,6 +174,7 @@ export function Home({
     },
     reconnect: true,
     reconnectInterval: 5000,
+    wsToken,
   });
 
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);

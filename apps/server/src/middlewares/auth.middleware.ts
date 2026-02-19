@@ -23,7 +23,6 @@ export const requireAuth = async (
       email: string;
     };
     req.user = payload;
-    console.log(payload);
     return next();
   } catch {
     return next(new ApiError(401, "Invalid token"));
