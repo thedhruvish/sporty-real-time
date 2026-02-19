@@ -223,7 +223,7 @@ export function Home({
       setSelectedMatch(match);
       setIsDetailsModalOpen(true);
     },
-    [sendMessage],
+    [sendMessage, isAuthenticated],
   );
 
   const handleCloseDetailsModal = useCallback(() => {

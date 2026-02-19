@@ -47,7 +47,7 @@ function RootComponent() {
         <div className="grid h-svh grid-rows-[auto_1fr]">
           <Outlet />
         </div>
-        <Toaster richColors position="top-right" />
+        <Toaster richColors position="bottom-left" />
       </ThemeProvider>
       <TanStackRouterDevtools position="bottom-left" />
     </>
